@@ -1,7 +1,7 @@
 ---
-import '@fontsource-variable/roboto-condensed';
-import '@fontsource-variable/roboto-condensed/wght-italic.css';
-import '@fontsource-variable/jost';
+import '@fontsource/anton';
+import '@fontsource-variable/inter';
+import '@fontsource-variable/inter/wght-italic.css';
 import '../styles/global.css';
 import { getImage } from 'astro:assets';
 import fotoHero from '../assets/img/hero-new-collection.jpg';
@@ -31,7 +31,7 @@ const ocultarEnBuscadores = import.meta.env.PUBLIC_NOINDEX === 'true';
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
     {ocultarEnBuscadores && <meta name="robots" content="noindex" />}
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#111214" />
     <link rel="icon" type="image/png" href={ruta('favicon.png')} />
     <link rel="apple-touch-icon" href={ruta('apple-touch-icon.png')} />
     <meta property="og:type" content="website" />

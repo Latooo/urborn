@@ -1,0 +1,111 @@
+---
+import { universo } from '../data/sitio';
+---
+
+<!--
+  The URBORN Universe: los capítulos de la marca en orden. Solo el primero tiene colección,
+  por eso es el único con enlace; los demás van más tenues.
+-->
+<section class="universo" aria-labelledby="titulo-universo">
+  <h2 class="titulo" id="titulo-universo" data-revelar="mascara"><span>The URBORN universe</span></h2>
+
+  <ol>
+    {
+      universo.map((capitulo) => (
+        <li class:list={{ publicado: capitulo.publicado }} data-revelar>
+          <div class="fila">
+            <h3 class="titulo">{capitulo.nombre}</h3>
+            <p>{capitulo.texto}</p>
+            {capitulo.publicado && <a href="#coleccion">Ver la colección</a>}
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .universo {
+    padding: clamp(4rem, 9vw, 9rem) var(--margen);
+    background: var(--asfalto);
+  }
+
+  h2 {
+    font-size: var(--t-titulo);
+  }
+
+  /* Es una secuencia de verdad, por eso lleva la numeración propia de la lista. */
+  ol {
+    display: grid;
+    gap: clamp(1.4rem, 2.6vw, 2.75rem);
+    margin-top: clamp(2rem, 4.5vw, 4.5rem);
+    padding-left: 1.6em;
+    list-style: decimal;
+    font-size: var(--t-titulo);
+  }
+
+  li::marker {
+    font-family: var(--fuente-titular);
+    font-size: 0.5em;
+    color: var(--tenue-oscuro);
+  }
+
+  .fila {
+    padding-left: 0.3em;
+  }
+
+  h3 {
+    font-size: 1em;
+    color: var(--tenue-oscuro);
+  }
+
+  .publicado h3 {
+    color: var(--hueso);
+  }
+
+  .fila p {
+    margin-top: 0.3rem;
+    font-size: var(--t-lead);
+    line-height: 1.35;
+  }
+
+  .fila a {
+    display: inline-block;
+    margin-top: 0.7rem;
+    font-size: var(--t-texto);
+    font-weight: 600;
+    text-underline-offset: 0.22em;
+  }
+
+  /* Tableta: el nombre a la izquierda y su frase a la derecha, con el enlace debajo de la frase. */
+  @media (min-width: 44rem) {
+    .fila {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--margen);
+      align-items: baseline;
+    }
+
+    .fila p {
+      margin-top: 0;
+    }
+
+    .fila a {
+      grid-column: 2;
+      justify-self: start;
+    }
+  }
+
+  /* Computador: nombre, frase y enlace en una misma fila. */
+  @media (min-width: 60rem) {
+    .fila {
+      grid-template-columns: 2fr 2fr 1fr;
+    }
+
+    .fila a {
+      grid-column: auto;
+      justify-self: end;
+      margin-top: 0;
+    }
+  }
+</style>

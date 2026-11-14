@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets';
+import banner from '../assets/img/banner-urborn.jpg';
+---
+
+<div class="figura">
+  <Image
+    src={banner}
+    alt="Figura encapuchada con máscara de cuervo delante del logo de URBORN en contorno."
+    widths={[640, 960, 1280, 1680, 2100, 2560, 3200]}
+    sizes="100vw"
+    quality={90}
+  />
+</div>
+
+<style>
+  .figura {
+    overflow: hidden;
+    background: var(--negro);
+    view-timeline-name: --figura;
+  }
+
+  .figura img {
+    width: 100%;
+  }
+
+  /*
+   * "Born from the unknown": al entrar en pantalla la figura sale de la oscuridad y se asienta.
+   * Va ligado al scroll y solo en navegadores que lo soportan; en los demás la imagen queda fija.
+   */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .figura img {
+        animation: emerger linear both;
+        animation-timeline: --figura;
+        animation-range: entry 0% cover 42%;
+      }
+    }
+  }
+
+  @keyframes emerger {
+    from {
+      opacity: 0.08;
+      transform: scale(1.16);
+    }
+  }
+</style>

@@ -59,8 +59,8 @@ const precio = precios.every((valor) => valor === menor) ? formatoPrecio(menor) 
 <style>
   .lema {
     padding: 0.38em var(--margen);
-    background: var(--humo);
-    color: var(--ceniza);
+    background: var(--asfalto);
+    color: var(--tenue-oscuro);
     font-size: var(--t-nota);
     line-height: 1;
     white-space: nowrap;
@@ -136,7 +136,7 @@ const precio = precios.every((valor) => valor === menor) ? formatoPrecio(menor) 
   }
 
   .linea + .linea {
-    margin-top: calc(var(--chico) * -0.16);
+    margin-top: calc(var(--chico) * 0.02);
   }
 
   .linea > span {
@@ -155,16 +155,15 @@ const precio = precios.every((valor) => valor === menor) ? formatoPrecio(menor) 
   }
 
   .grande {
-    font-size: clamp(2.9rem, 7.75vw, 9.25rem);
-    line-height: 0.78;
-    letter-spacing: -0.04em;
+    font-size: var(--t-display);
+    line-height: 0.98;
   }
 
   .chico {
     font-size: var(--chico);
     font-weight: 300;
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
   }
 
   .chico sup {
@@ -203,9 +202,9 @@ const precio = precios.every((valor) => valor === menor) ? formatoPrecio(menor) 
     display: inline-block;
     margin-top: 0.85rem;
     padding: 0.72em 1.2em;
-    background: var(--blanco);
+    background: var(--hueso);
     color: var(--negro);
-    font-weight: 700;
+    font-weight: 600;
     font-size: var(--t-texto);
     line-height: 1;
     text-decoration: none;
@@ -216,8 +215,8 @@ const precio = precios.every((valor) => valor === menor) ? formatoPrecio(menor) 
 
   .boton:hover {
     background: var(--negro);
-    color: var(--blanco);
-    outline: 2px solid var(--blanco);
+    color: var(--hueso);
+    outline: 2px solid var(--hueso);
     outline-offset: -2px;
   }
 

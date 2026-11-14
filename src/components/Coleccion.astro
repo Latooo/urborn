@@ -19,7 +19,7 @@ import { coleccion } from '../data/productos';
 
 <style>
   .coleccion {
-    background: var(--negro);
+    background: var(--asfalto);
     padding-top: clamp(1.75rem, 4vw, 4rem);
     overflow: hidden; /* las franjas de color se pintan más anchas que la pantalla */
   }
@@ -28,11 +28,10 @@ import { coleccion } from '../data/productos';
     padding-inline: var(--margen);
     margin-bottom: clamp(-0.6rem, -0.7vw, -0.2rem);
     font-size: var(--t-titulo);
-    letter-spacing: -0.04em;
   }
 
   /*
-   * Franjas negro/blanco como en el diseño: cada fila de la rejilla es una franja de lado a lado.
+   * Franjas Asphalt y Bone (en el diseño eran negro y blanco): cada fila de la rejilla es una franja de lado a lado.
    * Cada prenda tiene su fondo y un ::before que lo extiende hacia los lados, así el corte
    * de color sigue a las filas aunque cambie el número de columnas (3 en computador, 2 en celular).
    */
@@ -44,9 +43,9 @@ import { coleccion } from '../data/productos';
   }
 
   .prenda {
-    --fondo: var(--negro);
-    --texto: var(--blanco);
-    --secundario: var(--plata);
+    --fondo: var(--asfalto);
+    --texto: var(--hueso);
+    --secundario: var(--tenue-oscuro);
     position: relative;
     padding: clamp(1rem, 2.4vw, 2.5rem) 9% clamp(1.4rem, 3vw, 3.25rem);
     background: var(--fondo);
@@ -61,13 +60,13 @@ import { coleccion } from '../data/productos';
     background: var(--fondo);
   }
 
-  /* Celular, 2 columnas: filas pares en blanco. Las prendas de una fila entran una tras otra (--i). */
+  /* Celular, 2 columnas: filas pares en Bone. Las prendas de una fila entran una tras otra (--i). */
   @media (max-width: 43.99rem) {
     .prenda:nth-child(4n + 3),
     .prenda:nth-child(4n + 4) {
-      --fondo: var(--blanco);
+      --fondo: var(--hueso);
       --texto: var(--negro);
-      --secundario: var(--grafito);
+      --secundario: var(--tenue-claro);
     }
 
     .prenda:nth-child(2n) {
@@ -75,7 +74,7 @@ import { coleccion } from '../data/productos';
     }
   }
 
-  /* Computador, 3 columnas: filas pares en blanco. */
+  /* Computador, 3 columnas: filas pares en Bone. */
   @media (min-width: 44rem) {
     .rejilla {
       grid-template-columns: repeat(3, 1fr);
@@ -88,9 +87,9 @@ import { coleccion } from '../data/productos';
     .prenda:nth-child(6n + 4),
     .prenda:nth-child(6n + 5),
     .prenda:nth-child(6n + 6) {
-      --fondo: var(--blanco);
+      --fondo: var(--hueso);
       --texto: var(--negro);
-      --secundario: var(--grafito);
+      --secundario: var(--tenue-claro);
     }
 
     .prenda:nth-child(3n + 2) {

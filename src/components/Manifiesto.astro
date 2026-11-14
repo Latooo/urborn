@@ -1,47 +1,71 @@
 ---
-import { Image } from 'astro:assets';
-import banner from '../assets/img/banner-urborn.jpg';
+import { manifiesto } from '../data/sitio';
 ---
 
-<section class="manifiesto">
-  <Image
-    src={banner}
-    alt="Figura encapuchada con máscara de cuervo delante del logo de URBORN en contorno."
-    widths={[640, 960, 1280, 1680, 2100, 2560, 3200]}
-    sizes="100vw"
-    quality={90}
-  />
+<!-- El manifiesto de la marca, tal como lo entregó el cliente. Sigue a la figura sin corte de color. -->
+<section class="manifiesto" id="manifiesto" aria-labelledby="titulo-manifiesto">
+  <h2 class="titulo" id="titulo-manifiesto" data-revelar="mascara"><span>{manifiesto.titulo}</span></h2>
+
+  <ul>
+    {
+      manifiesto.puntos.map((punto) => (
+        <li data-revelar>
+          <h3 class="titulo">{punto.titulo}</h3>
+          <p>{punto.texto}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="titulo cierre" data-revelar="mascara"><span>{manifiesto.cierre}</span></p>
 </section>
 
 <style>
   .manifiesto {
-    overflow: hidden;
+    padding: clamp(3rem, 7vw, 7rem) var(--margen) clamp(4.5rem, 10vw, 10rem);
     background: var(--negro);
-    view-timeline-name: --manifiesto;
   }
 
-  .manifiesto img {
-    width: 100%;
+  /* En celular va un poco más pequeño que el titular del hero para que quepa en dos líneas. */
+  h2,
+  .cierre {
+    font-size: calc(var(--t-display) * 0.74);
+    text-wrap: balance;
   }
 
-  /*
-   * "Born from the unknown": al entrar en pantalla la figura sale de la oscuridad y se asienta.
-   * Va ligado al scroll y solo en navegadores que lo soportan; en los demás la imagen queda fija.
-   */
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .manifiesto img {
-        animation: emerger linear both;
-        animation-timeline: --manifiesto;
-        animation-range: entry 0% cover 42%;
-      }
+  ul {
+    display: grid;
+    gap: clamp(1.75rem, 3.4vw, 3.5rem);
+    margin-block: clamp(2.5rem, 6vw, 6rem);
+  }
+
+  h3 {
+    font-size: var(--t-titulo);
+  }
+
+  li p {
+    margin-top: 0.5rem;
+    max-width: 34rem;
+    font-size: var(--t-lead);
+    line-height: 1.35;
+  }
+
+  /* Computador: cada idea en una fila, la frase a la izquierda y su explicación a la derecha. */
+  @media (min-width: 60rem) {
+    h2,
+    .cierre {
+      font-size: var(--t-display);
     }
-  }
 
-  @keyframes emerger {
-    from {
-      opacity: 0.08;
-      transform: scale(1.16);
+    li {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: var(--margen);
+      align-items: baseline;
+    }
+
+    li p {
+      margin-top: 0;
     }
   }
 </style>
