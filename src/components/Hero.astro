@@ -1,49 +1,73 @@
 ---
 import { Image } from 'astro:assets';
 import foto from '../assets/img/hero-new-collection.jpg';
+import { coleccion, formatoPrecio } from '../data/productos';
 import { marca } from '../data/sitio';
 
 // El lema se repite dos veces seguidas para que la franja gire sin cortes.
 const copias = Array.from({ length: 2 });
 const repeticiones = Array.from({ length: 8 });
+
+// Precio que se anuncia en la portada: el de todas si es el mismo, o "desde" el menor.
+const precios = coleccion.productos.map((producto) => producto.precio);
+const menor = Math.min(...precios);
+const precio = precios.every((valor) => valor === menor) ? formatoPrecio(menor) : `desde ${formatoPrecio(menor)}`;
 ---
 
+<!-- La franja del lema va dentro de los mismos márgenes que la barra, como en el diseño. -->
 <div class="lema" aria-hidden="true">
-  <div class="pista">
-    {copias.map(() => <ul>{repeticiones.map(() => <li>{marca.lema}</li>)}</ul>)}
+  <div class="ventana">
+    <div class="pista">
+      {copias.map(() => <ul>{repeticiones.map(() => <li>{marca.lema}</li>)}</ul>)}
+    </div>
   </div>
 </div>
 
-<section class="hero" id="inicio">
-  <!--
-    La foto se recorta con object-fit: en celular se ve más ancha que la pantalla,
-    por eso "sizes" pide una imagen más grande ahí (si no, se ve borrosa).
-  -->
-  <Image
-    class="foto"
-    src={foto}
-    alt="Dos modelos con la camiseta The Origin de URBORN, uno de frente y otro de espaldas con el estampado del cuervo."
-    widths={[640, 960, 1280, 1680, 2100, 2560, 3200]}
-    sizes="(max-width: 44rem) 190vw, 100vw"
-    quality={90}
-    priority
-  />
+<div class="portada">
+  <section class="hero" id="inicio">
+    <!--
+      La foto se recorta con object-fit: en celular se ve más ancha que la pantalla,
+      por eso "sizes" pide una imagen más grande ahí (si no, se ve borrosa).
+    -->
+    <Image
+      class="foto"
+      src={foto}
+      alt="Dos modelos con la camiseta The Origin de URBORN, uno de frente y otro de espaldas con el estampado del cuervo."
+      widths={[640, 960, 1280, 1680, 2100, 2560, 3200]}
+      sizes="(max-width: 44rem) 190vw, 100vw"
+      quality={90}
+      priority
+    />
 
-  <h1 class="titular">
-    <span class="linea"><span class="titulo grande">New collection</span></span>
-    <span class="linea"><span class="chico">URBORN.STUDIO<sup>®</sup></span></span>
-  </h1>
-</section>
+    <h1 class="titular">
+      <span class="linea"><span class="titulo grande">New collection</span></span>
+      <span class="linea"><span class="chico">URBORN.STUDIO<sup>®</sup></span></span>
+    </h1>
+  </section>
+
+  <!--
+    Agregado sobre el diseño del cliente: dice en palabras simples qué es esto y cuánto cuesta,
+    y da un botón hacia las camisetas. En computador cierra la esquina derecha de la foto;
+    en celular va justo debajo.
+  -->
+  <div class="resumen">
+    <p>Camisetas estampadas de la colección {coleccion.nombre}, {precio}.</p>
+    <a class="boton" href="#coleccion">Ver la colección</a>
+  </div>
+</div>
 
 <style>
   .lema {
-    overflow: hidden;
-    padding-block: 0.38em;
+    padding: 0.38em var(--margen);
     background: var(--humo);
     color: var(--ceniza);
-    font-size: clamp(0.78rem, 1.28vw, 1.05rem);
+    font-size: var(--t-nota);
     line-height: 1;
     white-space: nowrap;
+  }
+
+  .ventana {
+    overflow: hidden;
   }
 
   .pista {
@@ -64,6 +88,12 @@ const repeticiones = Array.from({ length: 8 });
     }
   }
 
+  .portada {
+    position: relative;
+    background: var(--negro);
+    timeline-scope: --hero;
+  }
+
   .hero {
     position: relative;
     overflow: hidden;
@@ -80,17 +110,17 @@ const repeticiones = Array.from({ length: 8 });
     object-position: 47% 58%;
   }
 
-  /* Oscurece apenas la base de la foto para que el titular se lea sobre el muro gris. */
+  /* Velo neutro en la base de la foto para que el texto se lea sobre el muro gris. */
   .hero::after {
     content: '';
     position: absolute;
-    inset: 55% 0 0;
-    background: linear-gradient(to bottom, transparent, rgb(0 0 0 / 0.3));
+    inset: 50% 0 0;
+    background: linear-gradient(to bottom, transparent, rgb(0 0 0 / 0.42)); /* taste-skill-ignore */
     pointer-events: none;
   }
 
   .titular {
-    --chico: clamp(1.4rem, 3.85vw, 4.6rem);
+    --chico: var(--t-titulo);
     position: absolute;
     z-index: 1;
     left: var(--margen);
@@ -98,7 +128,7 @@ const repeticiones = Array.from({ length: 8 });
     font-weight: inherit;
   }
 
-  /* Cada línea del titular sube desde detrás de una máscara al cargar (después de la intro). */
+  /* Cada línea del titular sube desde detrás de una máscara al cargar. Todo queda quieto antes de 1,2 s. */
   .linea {
     display: block;
     overflow: hidden;
@@ -111,11 +141,11 @@ const repeticiones = Array.from({ length: 8 });
 
   .linea > span {
     display: block;
-    animation: subir 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--espera-intro, 0.15s) both;
+    animation: subir 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) var(--espera-intro, 0.1s) both;
   }
 
   .linea + .linea > span {
-    animation-delay: calc(var(--espera-intro, 0.15s) + 0.12s);
+    animation-delay: calc(var(--espera-intro, 0.1s) + 0.07s);
   }
 
   @keyframes subir {
@@ -146,9 +176,71 @@ const repeticiones = Array.from({ length: 8 });
     letter-spacing: 0;
   }
 
+  /* Qué es y qué hacer: en celular y tablet va debajo de la foto. */
+  .resumen {
+    padding: 1.1rem var(--margen) 0.4rem;
+    font-size: var(--t-lead);
+    line-height: 1.22;
+    text-wrap: balance;
+  }
+
+  .resumen > * {
+    animation: llegar 0.45s ease-out calc(var(--espera-intro, 0.1s) + 0.16s) both;
+  }
+
+  .resumen > .boton {
+    animation-delay: calc(var(--espera-intro, 0.1s) + 0.22s);
+  }
+
+  @keyframes llegar {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+  }
+
+  .boton {
+    display: inline-block;
+    margin-top: 0.85rem;
+    padding: 0.72em 1.2em;
+    background: var(--blanco);
+    color: var(--negro);
+    font-weight: 700;
+    font-size: var(--t-texto);
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+
+  .boton:hover {
+    background: var(--negro);
+    color: var(--blanco);
+    outline: 2px solid var(--blanco);
+    outline-offset: -2px;
+  }
+
+  .boton:active {
+    transform: translateY(1px);
+  }
+
+  /* Computador: el resumen se monta sobre la foto, abajo a la derecha, a la misma altura del titular. */
+  @media (min-width: 60rem) {
+    .resumen {
+      position: absolute;
+      z-index: 1;
+      right: var(--margen);
+      bottom: clamp(1rem, 3.1vw, 3rem);
+      padding: 0;
+      max-width: 17em;
+      text-align: right;
+    }
+  }
+
   /*
    * Movimiento ligado al scroll (solo navegadores que lo soportan; en los demás queda quieto):
-   * al bajar, la foto se queda atrás y el titular se adelanta y se desvanece.
+   * al bajar, la foto se queda atrás y los textos se adelantan y se desvanecen.
    */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
@@ -159,6 +251,14 @@ const repeticiones = Array.from({ length: 8 });
       }
 
       .titular {
+        animation: adelantarse linear both;
+        animation-timeline: --hero;
+        animation-range: exit 0% exit 75%;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) and (min-width: 60rem) {
+      .resumen {
         animation: adelantarse linear both;
         animation-timeline: --hero;
         animation-range: exit 0% exit 75%;
@@ -181,7 +281,8 @@ const repeticiones = Array.from({ length: 8 });
 
   @media (prefers-reduced-motion: reduce) {
     .pista,
-    .linea > span {
+    .linea > span,
+    .resumen > * {
       animation: none;
     }
   }

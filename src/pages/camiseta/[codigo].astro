@@ -3,6 +3,8 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Cabecera from '../../components/Cabecera.astro';
 import Pie from '../../components/Pie.astro';
+import Tarjeta from '../../components/Tarjeta.astro';
+import fotoPuesta from '../../assets/img/hero-new-collection.jpg';
 import { coleccion, enlaceWhatsapp, formatoPrecio, mensajePedido, type Producto } from '../../data/productos';
 import { marca } from '../../data/sitio';
 import { ruta } from '../../lib/rutas';
@@ -20,13 +22,14 @@ interface Props {
 }
 
 const { producto } = Astro.props;
+const otras = coleccion.productos.filter((otra) => otra.codigo !== producto.codigo);
 
 // El enlace a esta página va dentro del mensaje para que quien atiende sepa qué camiseta es.
 const estaPagina = Astro.site ? Astro.url.href : undefined;
 const pedido = (talla?: string) => enlaceWhatsapp(mensajePedido(producto, talla, estaPagina));
 
 const anchos = [480, 720, 960, 1280, 1600];
-const tamanos = '(min-width: 60rem) 27vw, 78vw';
+const tamanos = '(min-width: 60rem) 27vw, 72vw';
 
 // Trazo de Simple Icons (licencia CC0).
 const trazoWhatsapp =
@@ -40,56 +43,84 @@ const trazoWhatsapp =
   <Cabecera />
 
   <main class="ficha" id="contenido">
-    <div class="galeria" id="inicio">
-      <figure style={`view-transition-name: prenda-${producto.codigo}`}>
-        <Image
-          src={producto.frente}
-          alt={`${producto.nombre}, vista de frente`}
-          widths={anchos}
-          sizes={tamanos}
-          quality={90}
-          priority
-        />
-        <figcaption>frente</figcaption>
-      </figure>
-      <figure>
-        <Image
-          src={producto.espalda}
-          alt={`${producto.nombre}, vista de espalda con el logo de URBORN y el cuervo`}
-          widths={anchos}
-          sizes={tamanos}
-          quality={90}
-          loading="eager"
-        />
-        <figcaption>espalda</figcaption>
-      </figure>
+    <!-- Mitad negra con la prenda, mitad blanca con los datos: las mismas franjas del inicio. -->
+    <div class="principal">
+      <div class="galeria" id="inicio">
+        <figure style={`view-transition-name: prenda-${producto.codigo}`}>
+          <figcaption>frente</figcaption>
+          <Image
+            src={producto.frente}
+            alt={`${producto.nombre}, vista de frente`}
+            widths={anchos}
+            sizes={tamanos}
+            quality={90}
+            priority
+          />
+        </figure>
+        <figure>
+          <figcaption>espalda</figcaption>
+          <Image
+            src={producto.espalda}
+            alt={`${producto.nombre}, vista de espalda con el logo de URBORN y el cuervo`}
+            widths={anchos}
+            sizes={tamanos}
+            quality={90}
+            loading="eager"
+          />
+        </figure>
+      </div>
+
+      <div class="datos">
+        <h1 class="titulo">{producto.nombre}</h1>
+        <p class="precio">{formatoPrecio(producto.precio)}</p>
+        <p class="descripcion">{producto.descripcion}</p>
+
+        <fieldset class="tallas">
+          <legend>Talla</legend>
+          {
+            producto.tallas.map((talla) => (
+              <label>
+                <input type="radio" name="talla" value={talla} data-enlace={pedido(talla)} />
+                <span>{talla}</span>
+              </label>
+            ))
+          }
+        </fieldset>
+
+        <a class="pedir" href={pedido()} target="_blank" rel="noopener" data-pedido>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={trazoWhatsapp}></path></svg>
+          Pedir por WhatsApp
+        </a>
+        <p class="nota">Se abre el chat de URBORN con tu pedido ya escrito.</p>
+      </div>
     </div>
 
-    <div class="datos">
-      <a class="volver" href={ruta('#coleccion')}>Volver a {coleccion.nombre}</a>
+    <section class="puesta" aria-labelledby="titulo-puesta">
+      <h2 class="titulo" id="titulo-puesta" data-revelar="mascara"><span>Así se ve puesta</span></h2>
+      <div class="marco">
+        <Image
+          src={fotoPuesta}
+          alt="Dos modelos con la camiseta puesta: uno la muestra de frente y el otro de espaldas."
+          widths={[640, 960, 1280, 1680, 2100, 2560, 3200]}
+          sizes="(max-width: 44rem) 190vw, 100vw"
+          quality={90}
+        />
+      </div>
+    </section>
 
-      <h1 class="titulo">{producto.nombre}</h1>
-      <p class="precio">{formatoPrecio(producto.precio)}</p>
-      <p class="descripcion">{producto.descripcion}</p>
-
-      <fieldset class="tallas">
-        <legend>Talla</legend>
+    <section class="otras" aria-labelledby="titulo-otras">
+      <h2 class="titulo" id="titulo-otras" data-revelar="mascara"><span>Más de {coleccion.nombre}</span></h2>
+      <ul>
         {
-          producto.tallas.map((talla) => (
-            <label>
-              <input type="radio" name="talla" value={talla} data-enlace={pedido(talla)} />
-              <span>{talla}</span>
-            </label>
+          otras.map((otra) => (
+            <li>
+              <Tarjeta producto={otra} tamanos="(min-width: 60rem) 16vw, (min-width: 44rem) 28vw, 42vw" />
+            </li>
           ))
         }
-      </fieldset>
-
-      <a class="pedir" href={pedido()} target="_blank" rel="noopener" data-pedido>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={trazoWhatsapp}></path></svg>
-        Pedir por WhatsApp
-      </a>
-      <p class="nota">Se abre el chat de URBORN con tu pedido ya escrito.</p>
-    </div>
+      </ul>
+      <a class="volver" href={ruta('#coleccion')} data-revelar>Ver toda la colección</a>
+    </section>
   </main>
 
   <Pie />
@@ -109,20 +140,24 @@ const trazoWhatsapp =
 </script>
 
 <style>
-  /* Mitad negra con la prenda, mitad blanca con los datos: las mismas franjas del inicio. */
   .ficha {
-    display: grid;
     background: var(--negro);
   }
 
+  .principal {
+    display: grid;
+  }
+
+  /* Celular: frente y espalda en una fila que se desliza; la segunda prenda asoma a propósito. */
   .galeria {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: min(78vw, 30rem);
-    gap: 2vw;
+    grid-auto-columns: min(72vw, 28rem);
+    gap: 3vw;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    padding: clamp(1.25rem, 4vw, 2.5rem) 11vw clamp(1rem, 3vw, 2rem);
+    scroll-padding-inline: var(--margen);
+    padding: clamp(1.25rem, 4vw, 2.5rem) var(--margen) clamp(1rem, 3vw, 2rem);
     scrollbar-width: none;
   }
 
@@ -132,35 +167,29 @@ const trazoWhatsapp =
 
   figure {
     margin: 0;
-    scroll-snap-align: center;
+    scroll-snap-align: start;
   }
 
   figure img {
     width: 100%;
   }
 
+  /* La etiqueta va arriba de cada vista, como el texto pequeño estampado en la prenda. */
   figcaption {
-    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
     text-align: center;
-    font-size: 0.9rem;
+    font-size: var(--t-nota);
     color: var(--ceniza);
   }
 
   .datos {
-    padding: clamp(1.5rem, 6vw, 2.5rem) var(--margen) clamp(2.5rem, 8vw, 4rem);
+    padding: clamp(1.75rem, 6vw, 2.5rem) var(--margen) clamp(2.5rem, 8vw, 4rem);
     background: var(--blanco);
     color: var(--negro);
   }
 
-  .volver {
-    display: inline-block;
-    margin-bottom: clamp(1.25rem, 3vw, 2.25rem);
-    font-size: 0.95rem;
-    text-underline-offset: 0.2em;
-  }
-
   h1 {
-    font-size: clamp(2.6rem, 5.2vw, 5rem);
+    font-size: clamp(2.6rem, 5.2vw, 5rem); /* único titular grande de esta página */
     line-height: 0.85;
   }
 
@@ -168,14 +197,14 @@ const trazoWhatsapp =
     margin-top: 0.5rem;
     font-family: var(--fuente-precio);
     font-weight: 300;
-    font-size: clamp(1.35rem, 2vw, 1.8rem);
+    font-size: var(--t-lead);
   }
 
   .descripcion {
     margin-top: clamp(1rem, 2vw, 1.5rem);
     max-width: 34rem;
-    font-size: clamp(1rem, 1.15vw, 1.15rem);
-    line-height: 1.45;
+    font-size: var(--t-lead);
+    line-height: 1.3;
   }
 
   .tallas {
@@ -190,7 +219,7 @@ const trazoWhatsapp =
   .tallas legend {
     margin-bottom: 0.6rem;
     padding: 0;
-    font-size: 0.95rem;
+    font-size: var(--t-nota);
   }
 
   .tallas label {
@@ -211,9 +240,12 @@ const trazoWhatsapp =
     min-width: 3.1rem;
     height: 3.1rem;
     padding-inline: 0.6rem;
-    border: 1px solid var(--negro);
+    background: #e9e9e9;
     font-weight: 700;
-    font-size: 1.05rem;
+    font-size: var(--t-texto);
+    transition:
+      background-color 0.15s,
+      color 0.15s;
   }
 
   .tallas input:checked + span {
@@ -239,15 +271,12 @@ const trazoWhatsapp =
     justify-content: center;
     gap: 0.7rem;
     margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
-    max-width: 26rem;
     padding: 1.05rem 1.5rem;
     background: var(--negro);
     color: var(--blanco);
     font-weight: 700;
-    font-size: 1.15rem;
-    letter-spacing: -0.01em;
+    font-size: var(--t-texto);
     text-decoration: none;
-    text-transform: uppercase;
     transition:
       background-color 0.15s,
       color 0.15s;
@@ -262,20 +291,146 @@ const trazoWhatsapp =
   .pedir:hover {
     background: var(--blanco);
     color: var(--negro);
-    box-shadow: inset 0 0 0 2px var(--negro);
+    outline: 2px solid var(--negro);
+    outline-offset: -2px;
+  }
+
+  .pedir:active {
+    transform: translateY(1px);
   }
 
   .nota {
     margin-top: 0.7rem;
-    font-size: 0.9rem;
+    font-size: var(--t-nota);
     color: var(--grafito);
+  }
+
+  /* Entrada de los datos al cargar: uno tras otro y todo quieto antes de 1,2 s. */
+  .datos > *,
+  figure + figure {
+    animation: entrar 0.45s ease-out both;
+  }
+
+  .datos > :nth-child(2) {
+    animation-delay: 60ms;
+  }
+
+  .datos > :nth-child(3) {
+    animation-delay: 120ms;
+  }
+
+  .datos > :nth-child(4) {
+    animation-delay: 180ms;
+  }
+
+  .datos > :nth-child(5) {
+    animation-delay: 240ms;
+  }
+
+  .datos > :nth-child(6) {
+    animation-delay: 300ms;
+  }
+
+  @keyframes entrar {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+  }
+
+  /* La foto de campaña: cómo queda la camiseta puesta, de frente y de espaldas. */
+  .puesta {
+    padding-top: clamp(4rem, 9vw, 9rem);
+    background: var(--negro);
+  }
+
+  .puesta h2,
+  .otras h2 {
+    padding-inline: var(--margen);
+    font-size: var(--t-titulo);
+    letter-spacing: -0.04em;
+  }
+
+  .marco {
+    overflow: hidden;
+    margin-top: clamp(1rem, 2.4vw, 2.5rem);
+    height: clamp(20rem, 46vw, 82svh);
+    view-timeline-name: --puesta;
+  }
+
+  .marco img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 47% 52%;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .marco img {
+        animation: asentarse linear both;
+        animation-timeline: --puesta;
+        animation-range: entry 0% cover 55%;
+      }
+    }
+  }
+
+  @keyframes asentarse {
+    from {
+      transform: scale(1.14);
+    }
+  }
+
+  /* Las demás camisetas, sobre blanco. */
+  .otras {
+    --secundario: var(--grafito);
+    padding: clamp(4rem, 9vw, 9rem) 0 clamp(3rem, 7vw, 7rem);
+    background: var(--blanco);
+    color: var(--negro);
+  }
+
+  .otras ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem) clamp(1rem, 2.4vw, 2.5rem);
+    margin-top: clamp(1.25rem, 2.6vw, 2.75rem);
+    padding-inline: var(--margen);
+  }
+
+  .otras li:nth-child(2n) {
+    --i: 1;
+  }
+
+  .volver {
+    display: inline-block;
+    margin: clamp(2rem, 4vw, 3.5rem) var(--margen) 0;
+    font-size: var(--t-texto);
+    font-weight: 700;
+    text-underline-offset: 0.22em;
+  }
+
+  @media (min-width: 44rem) {
+    .otras ul {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .otras li:nth-child(2n) {
+      --i: 0;
+    }
+
+    .otras li:nth-child(3n + 2) {
+      --i: 1;
+    }
+
+    .otras li:nth-child(3n) {
+      --i: 2;
+    }
   }
 
   /* Computador: prenda a la izquierda (frente y espalda lado a lado), datos a la derecha. */
   @media (min-width: 60rem) {
-    .ficha {
+    .principal {
       grid-template-columns: 3fr 2fr;
-      min-height: calc(100svh - var(--alto-barra));
     }
 
     .galeria {
@@ -285,19 +440,46 @@ const trazoWhatsapp =
       gap: 1vw;
       align-content: center;
       overflow: visible;
-      padding: 3vw 2.5vw;
+      padding: clamp(2.5rem, 4.5vw, 5rem) var(--margen);
     }
 
     .datos {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: flex-start;
-      padding: 3vw clamp(2rem, 4vw, 4.5rem);
+      align-items: stretch;
+      padding: clamp(2.5rem, 4.5vw, 5rem) var(--margen);
     }
 
-    .pedir {
-      width: 100%;
+    .otras ul {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .otras li:nth-child(n) {
+      --i: 0;
+    }
+
+    .otras li:nth-child(5n + 2) {
+      --i: 1;
+    }
+
+    .otras li:nth-child(5n + 3) {
+      --i: 2;
+    }
+
+    .otras li:nth-child(5n + 4) {
+      --i: 3;
+    }
+
+    .otras li:nth-child(5n) {
+      --i: 4;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .datos > *,
+    figure + figure {
+      animation: none;
     }
   }
 </style>

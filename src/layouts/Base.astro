@@ -80,7 +80,8 @@ const ocultarEnBuscadores = import.meta.env.PUBLIC_NOINDEX === 'true';
               observador.unobserve(entrada.target);
             }
           },
-          { rootMargin: '0px 0px -8% 0px' },
+          // Sin margen: lo último de la página (el pie) también debe alcanzar a entrar.
+          { rootMargin: '0px' },
         );
 
         const limite = window.innerHeight * 0.95;

@@ -1,0 +1,95 @@
+---
+import { Image } from 'astro:assets';
+import { formatoPrecio, type Producto } from '../data/productos';
+import { ruta } from '../lib/rutas';
+
+interface Props {
+  producto: Producto;
+  /** Ancho con que se ve la prenda, para que el navegador pida la imagen del tamaño justo. */
+  tamanos?: string;
+}
+
+const { producto, tamanos = '(min-width: 44rem) 21vw, 38vw' } = Astro.props;
+const anchos = [240, 360, 480, 720, 960];
+---
+
+<!--
+  Tarjeta de una camiseta: lleva a su página. Frente y espalda van apilados y al pasar el cursor
+  (o enfocar con teclado) se ve la espalda. El color del texto lo pone quien la contiene.
+-->
+<a class="enlace" href={ruta(`camiseta/${producto.codigo}/`)} data-revelar>
+  <span class="fotos" style={`view-transition-name: prenda-${producto.codigo}`}>
+    <Image
+      class="frente"
+      src={producto.frente}
+      alt={`${producto.nombre}, vista de frente`}
+      widths={anchos}
+      sizes={tamanos}
+      quality={90}
+    />
+    <Image class="espalda" src={producto.espalda} alt="" widths={anchos} sizes={tamanos} quality={90} />
+  </span>
+  <h3 class="titulo">{producto.nombre}</h3>
+  <p class="precio">{formatoPrecio(producto.precio)}</p>
+</a>
+
+<style>
+  .enlace {
+    display: block;
+    text-decoration: none;
+  }
+
+  .fotos {
+    position: relative;
+    display: block;
+  }
+
+  .fotos img {
+    width: 100%;
+    transition: opacity 0.3s ease;
+  }
+
+  .espalda {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .enlace:focus-visible .frente {
+    opacity: 0;
+  }
+
+  .enlace:focus-visible .espalda {
+    opacity: 1;
+  }
+
+  @media (hover: hover) {
+    .enlace:hover .frente {
+      opacity: 0;
+    }
+
+    .enlace:hover .espalda {
+      opacity: 1;
+    }
+  }
+
+  h3,
+  .precio {
+    padding-left: 4%;
+  }
+
+  h3 {
+    margin-top: 0.3em;
+    font-size: var(--t-lead);
+    line-height: 1;
+    letter-spacing: -0.015em;
+  }
+
+  .precio {
+    font-family: var(--fuente-precio);
+    font-weight: 300;
+    font-size: var(--t-texto);
+    line-height: 1.15;
+    color: var(--secundario, currentColor);
+  }
+</style>

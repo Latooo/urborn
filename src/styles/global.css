@@ -2,7 +2,7 @@
 :root {
   --negro: #000;
   --blanco: #fff;
-  --carbon: #171718; /* barra superior */
+  --carbon: #1c1c1c; /* barra superior */
   --humo: #2d3037; /* franja del lema */
   --ceniza: #9a99a2; /* lema y textos secundarios sobre oscuro */
   --plata: #c8c8ca; /* precio sobre negro */
@@ -11,13 +11,19 @@
   --margen: clamp(1rem, 4vw, 4.5rem);
   --alto-barra: clamp(3.25rem, 7.8vw, 6rem);
 
+  /* Escala de texto: cuatro tamaños más el titular grande del hero. */
+  --t-titulo: clamp(1.75rem, 3.9vw, 4.5rem); /* títulos de sección y segunda línea del hero */
+  --t-lead: clamp(1.125rem, 1.6vw, 1.75rem); /* nombres de prenda y frases de apoyo */
+  --t-texto: clamp(1rem, 1.2vw, 1.125rem); /* texto corriente y botones */
+  --t-nota: 0.875rem; /* notas y letra pequeña */
+
   --fuente: 'Roboto Condensed Variable', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
   --fuente-precio: 'Jost Variable', 'Century Gothic', Futura, sans-serif;
 }
 
 /* Mientras corre la animación de entrada, el titular del hero espera a que suba la cortina. */
 html[data-intro]:not(.sin-intro) {
-  --espera-intro: 2.3s;
+  --espera-intro: 0.45s;
 }
 
 *,

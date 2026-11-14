@@ -57,8 +57,9 @@ const trazoTiktok =
     justify-content: space-between;
     gap: 1rem;
     height: var(--alto-barra);
-    padding-inline: clamp(1rem, 2.4vw, 2rem);
-    background: linear-gradient(90deg, #131313 0%, #1e1e1e 50%, #303030 100%);
+    padding-inline: var(--margen); /* mismos márgenes que el contenido */
+    /* Color plano. El diseño del cliente traía un degradado muy suave de izquierda a derecha, de #131313 a #303030. */
+    background: var(--carbon);
     view-transition-name: barra; /* la barra se queda quieta al cambiar de página */
   }
 

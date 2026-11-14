@@ -12,17 +12,17 @@ const anio = new Date().getFullYear();
 -->
 <footer class="pie" id="info">
   <div class="pecho">
-    <p>urborn.studio<br />est. MMXXVI</p>
-    <ul>
+    <p data-revelar>urborn.studio<br />est. MMXXVI</p>
+    <ul data-revelar style="--i: 1">
       <li><a href={redes.instagram} target="_blank" rel="noopener">instagram</a></li>
       <li><a href={redes.tiktok} target="_blank" rel="noopener">tiktok</a></li>
       <li><a href={redes.whatsapp} target="_blank" rel="noopener">whatsapp</a></li>
     </ul>
   </div>
 
-  <p class="frase">born from the unknown.</p>
+  <p class="frase" data-revelar style="--i: 2">born from the unknown.</p>
 
-  <p class="legal">© {anio} urborn</p>
+  <p class="legal" data-revelar style="--i: 3">© {anio} urborn</p>
 
   <a class="etiqueta" href="#inicio" aria-label="Volver arriba">
     <Image src={isotipo} alt="" width={64} />
@@ -34,7 +34,7 @@ const anio = new Date().getFullYear();
     position: relative;
     padding: clamp(3rem, 7vw, 6.5rem) var(--margen) clamp(1.1rem, 2vw, 1.75rem);
     background: var(--negro);
-    font-size: clamp(0.95rem, 1.25vw, 1.15rem);
+    font-size: var(--t-texto);
     line-height: 1.2;
   }
 
@@ -42,8 +42,7 @@ const anio = new Date().getFullYear();
     display: flex;
     justify-content: space-between;
     gap: 2rem;
-    max-width: 34rem;
-    margin-inline: auto;
+    font-size: var(--t-lead);
   }
 
   .pecho a {
@@ -59,13 +58,13 @@ const anio = new Date().getFullYear();
     margin-top: clamp(3rem, 7vw, 6rem);
     text-align: center;
     font-style: italic;
-    font-size: 0.85em;
+    font-size: var(--t-nota);
     color: var(--ceniza);
   }
 
   .legal {
     margin-top: clamp(2.5rem, 5vw, 4.5rem);
-    font-size: 0.8em;
+    font-size: var(--t-nota);
     color: var(--ceniza);
   }
 

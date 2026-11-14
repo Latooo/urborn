@@ -1,10 +1,6 @@
 ---
-import { Image } from 'astro:assets';
-import { coleccion, formatoPrecio } from '../data/productos';
-import { ruta } from '../lib/rutas';
-
-const anchos = [240, 360, 480, 720, 960];
-const tamanos = '(min-width: 44rem) 21vw, 38vw';
+import Tarjeta from './Tarjeta.astro';
+import { coleccion } from '../data/productos';
 ---
 
 <section class="coleccion" id="coleccion" aria-labelledby="titulo-coleccion">
@@ -14,21 +10,7 @@ const tamanos = '(min-width: 44rem) 21vw, 38vw';
     {
       coleccion.productos.map((producto) => (
         <li class="prenda">
-          <a class="enlace" href={ruta(`camiseta/${producto.codigo}/`)} data-revelar>
-            <span class="fotos" style={`view-transition-name: prenda-${producto.codigo}`}>
-              <Image
-                class="frente"
-                src={producto.frente}
-                alt={`${producto.nombre}, vista de frente`}
-                widths={anchos}
-                sizes={tamanos}
-                quality={90}
-              />
-              <Image class="espalda" src={producto.espalda} alt="" widths={anchos} sizes={tamanos} quality={90} />
-            </span>
-            <h3 class="titulo">{producto.nombre}</h3>
-            <p class="precio">{formatoPrecio(producto.precio)}</p>
-          </a>
+          <Tarjeta producto={producto} />
         </li>
       ))
     }
@@ -45,13 +27,13 @@ const tamanos = '(min-width: 44rem) 21vw, 38vw';
   h2 {
     padding-inline: var(--margen);
     margin-bottom: clamp(-0.6rem, -0.7vw, -0.2rem);
-    font-size: clamp(1.9rem, 4vw, 4.4rem);
+    font-size: var(--t-titulo);
     letter-spacing: -0.04em;
   }
 
   /*
    * Franjas negro/blanco como en el diseño: cada fila de la rejilla es una franja de lado a lado.
-   * Cada prenda pinta su franja con un ::before que se extiende hacia los lados, así el corte
+   * Cada prenda tiene su fondo y un ::before que lo extiende hacia los lados, así el corte
    * de color sigue a las filas aunque cambie el número de columnas (3 en computador, 2 en celular).
    */
   .rejilla {
@@ -67,80 +49,19 @@ const tamanos = '(min-width: 44rem) 21vw, 38vw';
     --secundario: var(--plata);
     position: relative;
     padding: clamp(1rem, 2.4vw, 2.5rem) 9% clamp(1.4rem, 3vw, 3.25rem);
+    background: var(--fondo);
     color: var(--texto);
   }
 
   .prenda::before {
     content: '';
     position: absolute;
-    inset: 0;
+    inset: 0 -100vmax;
     z-index: -1;
     background: var(--fondo);
-    box-shadow: 0 0 0 100vmax var(--fondo);
-    clip-path: inset(0 -100vmax);
   }
 
-  .enlace {
-    display: block;
-    text-decoration: none;
-  }
-
-  /* Frente y espalda apilados: al pasar el cursor (o enfocar con teclado) se ve la espalda. */
-  .fotos {
-    position: relative;
-    display: block;
-  }
-
-  .fotos img {
-    width: 100%;
-    transition: opacity 0.3s ease;
-  }
-
-  .espalda {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-  }
-
-  .enlace:focus-visible .frente {
-    opacity: 0;
-  }
-
-  .enlace:focus-visible .espalda {
-    opacity: 1;
-  }
-
-  @media (hover: hover) {
-    .enlace:hover .frente {
-      opacity: 0;
-    }
-
-    .enlace:hover .espalda {
-      opacity: 1;
-    }
-  }
-
-  h3,
-  .precio {
-    padding-left: 4%;
-  }
-
-  h3 {
-    margin-top: 0.3em;
-    font-size: clamp(1.05rem, 1.65vw, 1.8rem);
-    line-height: 1;
-    letter-spacing: -0.015em;
-  }
-
-  .precio {
-    font-family: var(--fuente-precio);
-    font-weight: 300;
-    font-size: clamp(0.82rem, 1.1vw, 1.15rem);
-    line-height: 1.15;
-    color: var(--secundario);
-  }
-
-  /* Celular, 2 columnas: filas pares en blanco. Las prendas de una fila entran una tras otra. */
+  /* Celular, 2 columnas: filas pares en blanco. Las prendas de una fila entran una tras otra (--i). */
   @media (max-width: 43.99rem) {
     .prenda:nth-child(4n + 3),
     .prenda:nth-child(4n + 4) {
@@ -149,7 +70,7 @@ const tamanos = '(min-width: 44rem) 21vw, 38vw';
       --secundario: var(--grafito);
     }
 
-    .prenda:nth-child(2n) .enlace {
+    .prenda:nth-child(2n) {
       --i: 1;
     }
   }
@@ -172,11 +93,11 @@ const tamanos = '(min-width: 44rem) 21vw, 38vw';
       --secundario: var(--grafito);
     }
 
-    .prenda:nth-child(3n + 2) .enlace {
+    .prenda:nth-child(3n + 2) {
       --i: 1;
     }
 
-    .prenda:nth-child(3n) .enlace {
+    .prenda:nth-child(3n) {
       --i: 2;
     }
   }
