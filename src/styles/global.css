@@ -97,6 +97,32 @@ a {
   line-height: 1;
 }
 
+/* Botón sobre fondo oscuro: el del hero y el del cierre del inicio. */
+.boton {
+  display: inline-block;
+  padding: 0.72em 1.2em;
+  background: var(--hueso);
+  color: var(--negro);
+  font-weight: 600;
+  font-size: var(--t-texto);
+  line-height: 1;
+  text-decoration: none;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.boton:hover {
+  background: var(--negro);
+  color: var(--hueso);
+  outline: 2px solid var(--hueso);
+  outline-offset: -2px;
+}
+
+.boton:active {
+  transform: translateY(1px);
+}
+
 .saltar {
   position: absolute;
   left: var(--margen);

@@ -1,10 +1,18 @@
 ---
+import { Image } from 'astro:assets';
+import { coleccion } from '../data/productos';
 import { universo } from '../data/sitio';
+import { ruta } from '../lib/rutas';
+
+// La prenda que representa al capítulo publicado.
+const prenda = coleccion.productos[0];
+const anchos = [240, 360, 480, 720];
+const tamanos = '(min-width: 44rem) 14rem, 42vw';
 ---
 
 <!--
   The URBORN Universe: los capítulos de la marca en orden. Solo el primero tiene colección,
-  por eso es el único con enlace; los demás van más tenues.
+  por eso es el único con enlace y con su camiseta; los nombres de los demás van más tenues.
 -->
 <section class="universo" aria-labelledby="titulo-universo">
   <h2 class="titulo" id="titulo-universo" data-revelar="mascara"><span>The URBORN universe</span></h2>
@@ -16,7 +24,25 @@ import { universo } from '../data/sitio';
           <div class="fila">
             <h3 class="titulo">{capitulo.nombre}</h3>
             <p>{capitulo.texto}</p>
-            {capitulo.publicado && <a href="#coleccion">Ver la colección</a>}
+            {capitulo.publicado && <a href={ruta('#coleccion')}>Ver la colección</a>}
+            {capitulo.publicado && (
+              <div class="muestra">
+                <Image
+                  src={prenda.frente}
+                  alt={`Camiseta de ${coleccion.nombre}, vista de frente`}
+                  widths={anchos}
+                  sizes={tamanos}
+                  quality={90}
+                />
+                <Image
+                  src={prenda.espalda}
+                  alt={`Camiseta de ${coleccion.nombre}, vista de espaldas`}
+                  widths={anchos}
+                  sizes={tamanos}
+                  quality={90}
+                />
+              </div>
+            )}
           </div>
         </li>
       ))
@@ -77,6 +103,13 @@ import { universo } from '../data/sitio';
     text-underline-offset: 0.22em;
   }
 
+  .muestra {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 14rem));
+    gap: clamp(0.75rem, 2vw, 2rem);
+    margin-top: 1.25rem;
+  }
+
   /* Tableta: el nombre a la izquierda y su frase a la derecha, con el enlace debajo de la frase. */
   @media (min-width: 44rem) {
     .fila {
@@ -90,7 +123,8 @@ import { universo } from '../data/sitio';
       margin-top: 0;
     }
 
-    .fila a {
+    .fila a,
+    .muestra {
       grid-column: 2;
       justify-self: start;
     }
@@ -106,6 +140,11 @@ import { universo } from '../data/sitio';
       grid-column: auto;
       justify-self: end;
       margin-top: 0;
+    }
+
+    /* La camiseta queda en una segunda fila, debajo de la frase. */
+    .muestra {
+      grid-column: 2 / -1;
     }
   }
 </style>

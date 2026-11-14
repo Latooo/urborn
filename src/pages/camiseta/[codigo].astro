@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import Cabecera from '../../components/Cabecera.astro';
 import Pie from '../../components/Pie.astro';
 import Tarjeta from '../../components/Tarjeta.astro';
-import fotoPuesta from '../../assets/img/hero-new-collection.jpg';
+import Campana from '../../components/Campana.astro';
 import { coleccion, enlaceWhatsapp, formatoPrecio, mensajePedido, type Producto } from '../../data/productos';
 import { marca } from '../../data/sitio';
 import { ruta } from '../../lib/rutas';
@@ -97,15 +97,7 @@ const trazoWhatsapp =
 
     <section class="puesta" aria-labelledby="titulo-puesta">
       <h2 class="titulo" id="titulo-puesta" data-revelar="mascara"><span>Así se ve puesta</span></h2>
-      <div class="marco">
-        <Image
-          src={fotoPuesta}
-          alt="Dos modelos con la camiseta puesta: uno la muestra de frente y el otro de espaldas."
-          widths={[640, 960, 1280, 1680, 2100, 2560, 3200]}
-          sizes="(max-width: 44rem) 190vw, 100vw"
-          quality={90}
-        />
-      </div>
+      <Campana />
     </section>
 
     <section class="otras" aria-labelledby="titulo-otras">
@@ -350,34 +342,8 @@ const trazoWhatsapp =
     font-size: var(--t-titulo);
   }
 
-  .marco {
-    overflow: hidden;
-    margin-top: clamp(1rem, 2.4vw, 2.5rem);
-    height: clamp(20rem, 46vw, 82svh);
-    view-timeline-name: --puesta;
-  }
-
-  .marco img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 47% 52%;
-  }
-
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .marco img {
-        animation: asentarse linear both;
-        animation-timeline: --puesta;
-        animation-range: entry 0% cover 55%;
-      }
-    }
-  }
-
-  @keyframes asentarse {
-    from {
-      transform: scale(1.14);
-    }
+  .puesta h2 {
+    margin-bottom: clamp(1rem, 2.4vw, 2.5rem);
   }
 
   /* Las demás camisetas, sobre blanco. */

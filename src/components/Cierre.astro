@@ -1,0 +1,41 @@
+---
+import { manifiesto } from '../data/sitio';
+import { ruta } from '../lib/rutas';
+---
+
+<!--
+  Cierre del inicio: la frase de la marca y el paso a la página con el manifiesto completo.
+  Sigue a la figura sin corte de color. Al entrar a /marca/ la frase viaja hasta el título de esa página.
+-->
+<section class="cierre" aria-labelledby="titulo-cierre">
+  <h2 class="titulo" id="titulo-cierre" data-revelar="mascara"><span>{manifiesto.titulo}</span></h2>
+  <p data-revelar><a class="boton" href={ruta('marca/')}>Leer el manifiesto</a></p>
+</section>
+
+<style>
+  .cierre {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    padding: clamp(3rem, 7vw, 7rem) var(--margen);
+    background: var(--negro);
+  }
+
+  /* En celular va un poco más pequeño que el titular del hero para que quepa en dos líneas. */
+  h2 {
+    font-size: calc(var(--t-display) * 0.74);
+    text-wrap: balance;
+    view-transition-name: frase;
+  }
+
+  /* Computador: la frase a la izquierda y el botón abajo a la derecha, como en el hero. */
+  @media (min-width: 60rem) {
+    .cierre {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+    }
+
+    h2 {
+      font-size: var(--t-display);
+    }
+  }
+</style>

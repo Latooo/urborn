@@ -2,22 +2,22 @@
 import { manifiesto } from '../data/sitio';
 ---
 
-<!-- El manifiesto de la marca, tal como lo entregó el cliente. Sigue a la figura sin corte de color. -->
-<section class="manifiesto" id="manifiesto" aria-labelledby="titulo-manifiesto">
-  <h2 class="titulo" id="titulo-manifiesto" data-revelar="mascara"><span>{manifiesto.titulo}</span></h2>
+<!-- El manifiesto de la marca, tal como lo entregó el cliente. Abre la página /marca/, por eso su título es el h1. -->
+<section class="manifiesto" id="inicio" aria-labelledby="titulo-manifiesto">
+  <h1 class="titulo" id="titulo-manifiesto">{manifiesto.titulo}</h1>
 
   <ul>
     {
-      manifiesto.puntos.map((punto) => (
-        <li data-revelar>
-          <h3 class="titulo">{punto.titulo}</h3>
+      manifiesto.puntos.map((punto, i) => (
+        <li style={`--i: ${i}`}>
+          <h2 class="titulo">{punto.titulo}</h2>
           <p>{punto.texto}</p>
         </li>
       ))
     }
   </ul>
 
-  <p class="titulo cierre" data-revelar="mascara"><span>{manifiesto.cierre}</span></p>
+  <p class="titulo cierre" style={`--i: ${manifiesto.puntos.length}`}>{manifiesto.cierre}</p>
 </section>
 
 <style>
@@ -27,10 +27,32 @@ import { manifiesto } from '../data/sitio';
   }
 
   /* En celular va un poco más pequeño que el titular del hero para que quepa en dos líneas. */
-  h2,
+  h1,
   .cierre {
     font-size: calc(var(--t-display) * 0.74);
     text-wrap: balance;
+  }
+
+  h1 {
+    view-transition-name: frase;
+  }
+
+  /*
+   * Es la primera pantalla de la página: el título está desde el comienzo (es el que recibe la
+   * frase que viene del inicio) y las ideas entran una tras otra al cargar.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    li,
+    .cierre {
+      animation: llegar 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) calc(0.12s + var(--i) * 0.07s) both;
+    }
+  }
+
+  @keyframes llegar {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
   }
 
   ul {
@@ -39,7 +61,7 @@ import { manifiesto } from '../data/sitio';
     margin-block: clamp(2.5rem, 6vw, 6rem);
   }
 
-  h3 {
+  h2 {
     font-size: var(--t-titulo);
   }
 
@@ -52,7 +74,7 @@ import { manifiesto } from '../data/sitio';
 
   /* Computador: cada idea en una fila, la frase a la izquierda y su explicación a la derecha. */
   @media (min-width: 60rem) {
-    h2,
+    h1,
     .cierre {
       font-size: var(--t-display);
     }
