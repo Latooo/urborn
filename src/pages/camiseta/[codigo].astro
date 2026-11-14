@@ -1,0 +1,303 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Cabecera from '../../components/Cabecera.astro';
+import Pie from '../../components/Pie.astro';
+import { coleccion, enlaceWhatsapp, formatoPrecio, mensajePedido, type Producto } from '../../data/productos';
+import { marca } from '../../data/sitio';
+import { ruta } from '../../lib/rutas';
+
+// Una página por camiseta: /camiseta/000/, /camiseta/001/...
+export function getStaticPaths() {
+  return coleccion.productos.map((producto) => ({
+    params: { codigo: producto.codigo },
+    props: { producto },
+  }));
+}
+
+interface Props {
+  producto: Producto;
+}
+
+const { producto } = Astro.props;
+
+// El enlace a esta página va dentro del mensaje para que quien atiende sepa qué camiseta es.
+const estaPagina = Astro.site ? Astro.url.href : undefined;
+const pedido = (talla?: string) => enlaceWhatsapp(mensajePedido(producto, talla, estaPagina));
+
+const anchos = [480, 720, 960, 1280, 1600];
+const tamanos = '(min-width: 60rem) 27vw, 78vw';
+
+// Trazo de Simple Icons (licencia CC0).
+const trazoWhatsapp =
+  'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z';
+---
+
+<Base
+  titulo={`${producto.nombre} — ${marca.nombre}`}
+  descripcion={`${producto.nombre} de la colección ${coleccion.nombre}, ${formatoPrecio(producto.precio)}. Pedidos por WhatsApp.`}
+>
+  <Cabecera />
+
+  <main class="ficha" id="contenido">
+    <div class="galeria" id="inicio">
+      <figure style={`view-transition-name: prenda-${producto.codigo}`}>
+        <Image
+          src={producto.frente}
+          alt={`${producto.nombre}, vista de frente`}
+          widths={anchos}
+          sizes={tamanos}
+          quality={90}
+          priority
+        />
+        <figcaption>frente</figcaption>
+      </figure>
+      <figure>
+        <Image
+          src={producto.espalda}
+          alt={`${producto.nombre}, vista de espalda con el logo de URBORN y el cuervo`}
+          widths={anchos}
+          sizes={tamanos}
+          quality={90}
+          loading="eager"
+        />
+        <figcaption>espalda</figcaption>
+      </figure>
+    </div>
+
+    <div class="datos">
+      <a class="volver" href={ruta('#coleccion')}>Volver a {coleccion.nombre}</a>
+
+      <h1 class="titulo">{producto.nombre}</h1>
+      <p class="precio">{formatoPrecio(producto.precio)}</p>
+      <p class="descripcion">{producto.descripcion}</p>
+
+      <fieldset class="tallas">
+        <legend>Talla</legend>
+        {
+          producto.tallas.map((talla) => (
+            <label>
+              <input type="radio" name="talla" value={talla} data-enlace={pedido(talla)} />
+              <span>{talla}</span>
+            </label>
+          ))
+        }
+      </fieldset>
+
+      <a class="pedir" href={pedido()} target="_blank" rel="noopener" data-pedido>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={trazoWhatsapp}></path></svg>
+        Pedir por WhatsApp
+      </a>
+      <p class="nota">Se abre el chat de URBORN con tu pedido ya escrito.</p>
+    </div>
+  </main>
+
+  <Pie />
+</Base>
+
+<script>
+  // Al elegir talla, el botón de WhatsApp lleva el mensaje con esa talla.
+  const boton = document.querySelector<HTMLAnchorElement>('[data-pedido]');
+
+  for (const opcion of document.querySelectorAll<HTMLInputElement>('input[name="talla"]')) {
+    opcion.addEventListener('change', () => {
+      if (boton && opcion.checked && opcion.dataset.enlace) boton.href = opcion.dataset.enlace;
+    });
+    // Si el navegador recordó una talla marcada al volver atrás, el botón debe coincidir.
+    if (boton && opcion.checked && opcion.dataset.enlace) boton.href = opcion.dataset.enlace;
+  }
+</script>
+
+<style>
+  /* Mitad negra con la prenda, mitad blanca con los datos: las mismas franjas del inicio. */
+  .ficha {
+    display: grid;
+    background: var(--negro);
+  }
+
+  .galeria {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(78vw, 30rem);
+    gap: 2vw;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: clamp(1.25rem, 4vw, 2.5rem) 11vw clamp(1rem, 3vw, 2rem);
+    scrollbar-width: none;
+  }
+
+  .galeria::-webkit-scrollbar {
+    display: none;
+  }
+
+  figure {
+    margin: 0;
+    scroll-snap-align: center;
+  }
+
+  figure img {
+    width: 100%;
+  }
+
+  figcaption {
+    margin-top: 0.4rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--ceniza);
+  }
+
+  .datos {
+    padding: clamp(1.5rem, 6vw, 2.5rem) var(--margen) clamp(2.5rem, 8vw, 4rem);
+    background: var(--blanco);
+    color: var(--negro);
+  }
+
+  .volver {
+    display: inline-block;
+    margin-bottom: clamp(1.25rem, 3vw, 2.25rem);
+    font-size: 0.95rem;
+    text-underline-offset: 0.2em;
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 5.2vw, 5rem);
+    line-height: 0.85;
+  }
+
+  .precio {
+    margin-top: 0.5rem;
+    font-family: var(--fuente-precio);
+    font-weight: 300;
+    font-size: clamp(1.35rem, 2vw, 1.8rem);
+  }
+
+  .descripcion {
+    margin-top: clamp(1rem, 2vw, 1.5rem);
+    max-width: 34rem;
+    font-size: clamp(1rem, 1.15vw, 1.15rem);
+    line-height: 1.45;
+  }
+
+  .tallas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .tallas legend {
+    margin-bottom: 0.6rem;
+    padding: 0;
+    font-size: 0.95rem;
+  }
+
+  .tallas label {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .tallas input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .tallas span {
+    display: grid;
+    place-items: center;
+    min-width: 3.1rem;
+    height: 3.1rem;
+    padding-inline: 0.6rem;
+    border: 1px solid var(--negro);
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+
+  .tallas input:checked + span {
+    background: var(--negro);
+    color: var(--blanco);
+  }
+
+  .tallas input:focus-visible + span {
+    outline: 2px solid var(--negro);
+    outline-offset: 3px;
+  }
+
+  @media (hover: hover) {
+    .tallas label:hover span {
+      background: var(--negro);
+      color: var(--blanco);
+    }
+  }
+
+  .pedir {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+    max-width: 26rem;
+    padding: 1.05rem 1.5rem;
+    background: var(--negro);
+    color: var(--blanco);
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+
+  .pedir svg {
+    width: 1.35rem;
+    height: 1.35rem;
+    flex: none;
+  }
+
+  .pedir:hover {
+    background: var(--blanco);
+    color: var(--negro);
+    box-shadow: inset 0 0 0 2px var(--negro);
+  }
+
+  .nota {
+    margin-top: 0.7rem;
+    font-size: 0.9rem;
+    color: var(--grafito);
+  }
+
+  /* Computador: prenda a la izquierda (frente y espalda lado a lado), datos a la derecha. */
+  @media (min-width: 60rem) {
+    .ficha {
+      grid-template-columns: 3fr 2fr;
+      min-height: calc(100svh - var(--alto-barra));
+    }
+
+    .galeria {
+      grid-auto-flow: row;
+      grid-template-columns: 1fr 1fr;
+      grid-auto-columns: auto;
+      gap: 1vw;
+      align-content: center;
+      overflow: visible;
+      padding: 3vw 2.5vw;
+    }
+
+    .datos {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 3vw clamp(2rem, 4vw, 4.5rem);
+    }
+
+    .pedir {
+      width: 100%;
+    }
+  }
+</style>

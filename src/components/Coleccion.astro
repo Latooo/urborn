@@ -1,23 +1,34 @@
 ---
 import { Image } from 'astro:assets';
 import { coleccion, formatoPrecio } from '../data/productos';
+import { ruta } from '../lib/rutas';
+
+const anchos = [240, 360, 480, 720, 960];
+const tamanos = '(min-width: 44rem) 21vw, 38vw';
 ---
 
-<section class="coleccion" aria-labelledby="titulo-coleccion">
-  <h2 class="titulo" id="titulo-coleccion">{coleccion.nombre}</h2>
+<section class="coleccion" id="coleccion" aria-labelledby="titulo-coleccion">
+  <h2 class="titulo" id="titulo-coleccion" data-revelar="mascara"><span>{coleccion.nombre}</span></h2>
 
   <ul class="rejilla">
     {
       coleccion.productos.map((producto) => (
         <li class="prenda">
-          <Image
-            src={producto.imagen}
-            alt={`${producto.nombre}, vista de frente`}
-            widths={[240, 360, 480, 720]}
-            sizes="(min-width: 44rem) 21vw, 38vw"
-          />
-          <h3 class="titulo">{producto.nombre}</h3>
-          <p class="precio">{formatoPrecio(producto.precio)}</p>
+          <a class="enlace" href={ruta(`camiseta/${producto.codigo}/`)} data-revelar>
+            <span class="fotos" style={`view-transition-name: prenda-${producto.codigo}`}>
+              <Image
+                class="frente"
+                src={producto.frente}
+                alt={`${producto.nombre}, vista de frente`}
+                widths={anchos}
+                sizes={tamanos}
+                quality={90}
+              />
+              <Image class="espalda" src={producto.espalda} alt="" widths={anchos} sizes={tamanos} quality={90} />
+            </span>
+            <h3 class="titulo">{producto.nombre}</h3>
+            <p class="precio">{formatoPrecio(producto.precio)}</p>
+          </a>
         </li>
       ))
     }
@@ -69,8 +80,44 @@ import { coleccion, formatoPrecio } from '../data/productos';
     clip-path: inset(0 -100vmax);
   }
 
-  .prenda img {
+  .enlace {
+    display: block;
+    text-decoration: none;
+  }
+
+  /* Frente y espalda apilados: al pasar el cursor (o enfocar con teclado) se ve la espalda. */
+  .fotos {
+    position: relative;
+    display: block;
+  }
+
+  .fotos img {
     width: 100%;
+    transition: opacity 0.3s ease;
+  }
+
+  .espalda {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .enlace:focus-visible .frente {
+    opacity: 0;
+  }
+
+  .enlace:focus-visible .espalda {
+    opacity: 1;
+  }
+
+  @media (hover: hover) {
+    .enlace:hover .frente {
+      opacity: 0;
+    }
+
+    .enlace:hover .espalda {
+      opacity: 1;
+    }
   }
 
   h3,
@@ -93,13 +140,17 @@ import { coleccion, formatoPrecio } from '../data/productos';
     color: var(--secundario);
   }
 
-  /* Celular, 2 columnas: filas pares en blanco. */
+  /* Celular, 2 columnas: filas pares en blanco. Las prendas de una fila entran una tras otra. */
   @media (max-width: 43.99rem) {
     .prenda:nth-child(4n + 3),
     .prenda:nth-child(4n + 4) {
       --fondo: var(--blanco);
       --texto: var(--negro);
       --secundario: var(--grafito);
+    }
+
+    .prenda:nth-child(2n) .enlace {
+      --i: 1;
     }
   }
 
@@ -119,6 +170,14 @@ import { coleccion, formatoPrecio } from '../data/productos';
       --fondo: var(--blanco);
       --texto: var(--negro);
       --secundario: var(--grafito);
+    }
+
+    .prenda:nth-child(3n + 2) .enlace {
+      --i: 1;
+    }
+
+    .prenda:nth-child(3n) .enlace {
+      --i: 2;
     }
   }
 </style>

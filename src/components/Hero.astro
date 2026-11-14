@@ -15,18 +15,23 @@ const repeticiones = Array.from({ length: 8 });
 </div>
 
 <section class="hero" id="inicio">
+  <!--
+    La foto se recorta con object-fit: en celular se ve más ancha que la pantalla,
+    por eso "sizes" pide una imagen más grande ahí (si no, se ve borrosa).
+  -->
   <Image
     class="foto"
     src={foto}
     alt="Dos modelos con la camiseta The Origin de URBORN, uno de frente y otro de espaldas con el estampado del cuervo."
-    widths={[640, 960, 1280, 1680, foto.width]}
-    sizes="100vw"
+    widths={[640, 960, 1280, 1680, 2100, 2560, 3200, foto.width]}
+    sizes="(max-width: 44rem) 190vw, 100vw"
+    quality={84}
     priority
   />
 
   <h1 class="titular">
-    <span class="titulo grande">New collection</span>
-    <span class="chico">URBORN.STUDIO<sup>®</sup></span>
+    <span class="linea"><span class="titulo grande">New collection</span></span>
+    <span class="linea"><span class="chico">URBORN.STUDIO<sup>®</sup></span></span>
   </h1>
 </section>
 
@@ -65,6 +70,7 @@ const repeticiones = Array.from({ length: 8 });
     /* Proporción del diseño en computador; en celular queda casi cuadrado para que quepan los dos modelos. */
     height: clamp(22rem, 49.2vw, 86svh);
     background: var(--negro);
+    view-timeline-name: --hero;
   }
 
   .foto {
@@ -84,6 +90,7 @@ const repeticiones = Array.from({ length: 8 });
   }
 
   .titular {
+    --chico: clamp(1.4rem, 3.85vw, 4.6rem);
     position: absolute;
     z-index: 1;
     left: var(--margen);
@@ -91,8 +98,30 @@ const repeticiones = Array.from({ length: 8 });
     font-weight: inherit;
   }
 
-  .titular span {
+  /* Cada línea del titular sube desde detrás de una máscara al cargar (después de la intro). */
+  .linea {
     display: block;
+    overflow: hidden;
+    padding-right: 0.4em; /* para que la máscara no corte la ® ni el borde de la última letra */
+  }
+
+  .linea + .linea {
+    margin-top: calc(var(--chico) * -0.16);
+  }
+
+  .linea > span {
+    display: block;
+    animation: subir 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--espera-intro, 0.15s) both;
+  }
+
+  .linea + .linea > span {
+    animation-delay: calc(var(--espera-intro, 0.15s) + 0.12s);
+  }
+
+  @keyframes subir {
+    from {
+      transform: translateY(110%);
+    }
   }
 
   .grande {
@@ -102,8 +131,7 @@ const repeticiones = Array.from({ length: 8 });
   }
 
   .chico {
-    font-size: clamp(1.4rem, 3.85vw, 4.6rem);
-    margin-top: -0.16em;
+    font-size: var(--chico);
     font-weight: 300;
     line-height: 1;
     letter-spacing: -0.02em;
@@ -118,8 +146,42 @@ const repeticiones = Array.from({ length: 8 });
     letter-spacing: 0;
   }
 
+  /*
+   * Movimiento ligado al scroll (solo navegadores que lo soportan; en los demás queda quieto):
+   * al bajar, la foto se queda atrás y el titular se adelanta y se desvanece.
+   */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .foto {
+        animation: quedarse linear both;
+        animation-timeline: --hero;
+        animation-range: exit 0% exit 100%;
+      }
+
+      .titular {
+        animation: adelantarse linear both;
+        animation-timeline: --hero;
+        animation-range: exit 0% exit 75%;
+      }
+    }
+  }
+
+  @keyframes quedarse {
+    to {
+      transform: translateY(22%);
+    }
+  }
+
+  @keyframes adelantarse {
+    to {
+      transform: translateY(-45%);
+      opacity: 0;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .pista {
+    .pista,
+    .linea > span {
       animation: none;
     }
   }

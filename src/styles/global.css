@@ -15,6 +15,11 @@
   --fuente-precio: 'Jost Variable', 'Century Gothic', Futura, sans-serif;
 }
 
+/* Mientras corre la animación de entrada, el titular del hero espera a que suba la cortina. */
+html[data-intro]:not(.sin-intro) {
+  --espera-intro: 2.3s;
+}
+
 *,
 *::before,
 *::after {
@@ -90,5 +95,51 @@ a {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+/*
+ * Apariciones al hacer scroll. El script de Base.astro marca con .oculto solo lo que está
+ * por debajo de la pantalla al cargar y se lo quita cuando entra: sin JavaScript todo se ve.
+ */
+[data-revelar] {
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+
+[data-revelar].oculto {
+  opacity: 0;
+  transform: translateY(1.75rem);
+  transition: none;
+}
+
+/* Variante para títulos: el texto sube desde detrás de una máscara. */
+[data-revelar='mascara'] {
+  display: block;
+  overflow: hidden;
+  transition: none;
+}
+
+[data-revelar='mascara'].oculto {
+  opacity: 1;
+  transform: none;
+}
+
+[data-revelar='mascara'] > span {
+  display: inline-block;
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+[data-revelar='mascara'].oculto > span {
+  transform: translateY(105%);
+  transition: none;
+}
+
+/* Al pasar del inicio a una camiseta (y de vuelta) la prenda viaja de una página a la otra. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
   }
 }

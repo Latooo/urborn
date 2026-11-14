@@ -1,0 +1,95 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/urborn-logo-blanco.png';
+import { marca } from '../data/sitio';
+---
+
+<!--
+  Entrada de la página: sobre negro aparece la R del cuervo, de ella se abre el nombre completo,
+  entra el lema y la cortina sube para dejar ver el sitio. Dura unos 2,7 s y es solo CSS.
+  Se muestra una vez por visita: el script de Base.astro pone .sin-intro en <html> cuando ya se vio
+  o cuando la persona pidió menos movimiento en su sistema.
+-->
+<div class="intro" aria-hidden="true">
+  <div class="marca">
+    <Image class="logo" src={logo} alt="" width={960} loading="eager" />
+    <p class="lema">{marca.lema}</p>
+  </div>
+</div>
+
+<style>
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    background: var(--negro);
+    animation: levantar 0.7s cubic-bezier(0.76, 0, 0.24, 1) 2.05s both;
+  }
+
+  .marca {
+    width: min(72vw, 42rem);
+  }
+
+  /*
+   * La R ocupa del 17,5 % al 30 % del ancho del logo. Al inicio el recorte deja ver solo la R,
+   * centrada en pantalla y más grande; luego el recorte se abre y el logo vuelve a su sitio.
+   */
+  .logo {
+    width: 100%;
+    transform-origin: 23.75% 50%;
+    animation: nacer 1.5s both;
+  }
+
+  @keyframes nacer {
+    0% {
+      opacity: 0;
+      filter: blur(14px);
+      clip-path: inset(0 69.4% 0 16.9%);
+      transform: translateX(26.25%) scale(1.7);
+    }
+
+    38%,
+    52% {
+      opacity: 1;
+      filter: blur(0);
+      clip-path: inset(0 69.4% 0 16.9%);
+      transform: translateX(26.25%) scale(1.7);
+      animation-timing-function: cubic-bezier(0.7, 0, 0.2, 1);
+    }
+
+    100% {
+      opacity: 1;
+      filter: blur(0);
+      clip-path: inset(0 0 0 0);
+      transform: none;
+    }
+  }
+
+  .lema {
+    margin-top: 0.5em;
+    text-align: right;
+    font-size: clamp(0.8rem, 2.4vw, 1.35rem);
+    color: var(--plata);
+    animation: asomar 0.5s ease 1.4s both;
+  }
+
+  @keyframes asomar {
+    from {
+      opacity: 0;
+      transform: translateY(0.4em);
+    }
+  }
+
+  @keyframes levantar {
+    to {
+      transform: translateY(-100%);
+      visibility: hidden;
+    }
+  }
+
+  :global(html.sin-intro) .intro {
+    display: none;
+  }
+</style>
