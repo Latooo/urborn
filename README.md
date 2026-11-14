@@ -51,4 +51,7 @@ variable se compila para la raíz, que es lo que necesita Netlify (comando `npm 
   el diseño no los traía. Los íconos de la R y la i tienen destino provisional.
 - Fase 2, página por camiseta y pedido por WhatsApp: en revisión. Las tallas (S, M, L, XL) y la descripción son
   provisionales hasta que el cliente confirme; están marcadas en `src/data/productos.ts`.
+- Las fotos del hero, el banner y la camiseta se ampliaron al doble y se limpiaron con Real-ESRGAN a partir de lo
+  que envió el cliente (los originales están en `referencia/cliente/`). Cuando lleguen los archivos en alta,
+  se reemplazan en `src/assets/img/` con el mismo nombre.
 - Pendiente: contenido real y pulido (fase 3), Netlify y dominio (fase 4).
