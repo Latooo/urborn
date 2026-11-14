@@ -1,4 +1,4 @@
-# Publica la carpeta site/ en GitHub Pages cada vez que se sube algo a main.
+# Compila el sitio con Astro y lo publica en GitHub Pages cada vez que se sube algo a main.
 name: Deploy a GitHub Pages
 
 on:
@@ -24,12 +24,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          check-latest: true
+          cache: npm
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Compilar
+        run: npm run build
+        env:
+          # En Pages el sitio vive en https://latooo.github.io/urborn/ y no debe indexarse.
+          SITE_URL: https://latooo.github.io
+          BASE_PATH: /urborn/
+          PUBLIC_NOINDEX: "true"
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: dist
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5

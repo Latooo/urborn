@@ -1,0 +1,124 @@
+---
+import { Image } from 'astro:assets';
+import { coleccion, formatoPrecio } from '../data/productos';
+---
+
+<section class="coleccion" aria-labelledby="titulo-coleccion">
+  <h2 class="titulo" id="titulo-coleccion">{coleccion.nombre}</h2>
+
+  <ul class="rejilla">
+    {
+      coleccion.productos.map((producto) => (
+        <li class="prenda">
+          <Image
+            src={producto.imagen}
+            alt={`${producto.nombre}, vista de frente`}
+            widths={[240, 360, 480, 720]}
+            sizes="(min-width: 44rem) 21vw, 38vw"
+          />
+          <h3 class="titulo">{producto.nombre}</h3>
+          <p class="precio">{formatoPrecio(producto.precio)}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .coleccion {
+    background: var(--negro);
+    padding-top: clamp(1.75rem, 4vw, 4rem);
+    overflow: hidden; /* las franjas de color se pintan más anchas que la pantalla */
+  }
+
+  h2 {
+    padding-inline: var(--margen);
+    margin-bottom: clamp(-0.6rem, -0.7vw, -0.2rem);
+    font-size: clamp(1.9rem, 4vw, 4.4rem);
+    letter-spacing: -0.04em;
+  }
+
+  /*
+   * Franjas negro/blanco como en el diseño: cada fila de la rejilla es una franja de lado a lado.
+   * Cada prenda pinta su franja con un ::before que se extiende hacia los lados, así el corte
+   * de color sigue a las filas aunque cambie el número de columnas (3 en computador, 2 en celular).
+   */
+  .rejilla {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding-inline: clamp(0.5rem, 6.4vw, 7rem);
+    isolation: isolate;
+  }
+
+  .prenda {
+    --fondo: var(--negro);
+    --texto: var(--blanco);
+    --secundario: var(--plata);
+    position: relative;
+    padding: clamp(1rem, 2.4vw, 2.5rem) 9% clamp(1.4rem, 3vw, 3.25rem);
+    color: var(--texto);
+  }
+
+  .prenda::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--fondo);
+    box-shadow: 0 0 0 100vmax var(--fondo);
+    clip-path: inset(0 -100vmax);
+  }
+
+  .prenda img {
+    width: 100%;
+  }
+
+  h3,
+  .precio {
+    padding-left: 4%;
+  }
+
+  h3 {
+    margin-top: 0.3em;
+    font-size: clamp(1.05rem, 1.65vw, 1.8rem);
+    line-height: 1;
+    letter-spacing: -0.015em;
+  }
+
+  .precio {
+    font-family: var(--fuente-precio);
+    font-weight: 300;
+    font-size: clamp(0.82rem, 1.1vw, 1.15rem);
+    line-height: 1.15;
+    color: var(--secundario);
+  }
+
+  /* Celular, 2 columnas: filas pares en blanco. */
+  @media (max-width: 43.99rem) {
+    .prenda:nth-child(4n + 3),
+    .prenda:nth-child(4n + 4) {
+      --fondo: var(--blanco);
+      --texto: var(--negro);
+      --secundario: var(--grafito);
+    }
+  }
+
+  /* Computador, 3 columnas: filas pares en blanco. */
+  @media (min-width: 44rem) {
+    .rejilla {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .prenda {
+      padding-inline: 14%;
+    }
+
+    .prenda:nth-child(6n + 4),
+    .prenda:nth-child(6n + 5),
+    .prenda:nth-child(6n + 6) {
+      --fondo: var(--blanco);
+      --texto: var(--negro);
+      --secundario: var(--grafito);
+    }
+  }
+</style>

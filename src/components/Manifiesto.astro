@@ -1,0 +1,23 @@
+---
+import { Image } from 'astro:assets';
+import banner from '../assets/img/banner-urborn.jpg';
+---
+
+<section class="manifiesto">
+  <Image
+    src={banner}
+    alt="Figura encapuchada con máscara de cuervo delante del logo de URBORN en contorno."
+    widths={[640, 960, 1280, 1680, banner.width]}
+    sizes="100vw"
+  />
+</section>
+
+<style>
+  .manifiesto {
+    background: var(--negro);
+  }
+
+  .manifiesto img {
+    width: 100%;
+  }
+</style>

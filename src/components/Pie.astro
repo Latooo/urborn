@@ -1,0 +1,87 @@
+---
+import { Image } from 'astro:assets';
+import isotipo from '../assets/brand/urborn-r-negro.png';
+import { redes } from '../data/sitio';
+
+const anio = new Date().getFullYear();
+---
+
+<!--
+  Propuesta (el diseño del cliente no trae pie de página): repite la composición de la camiseta.
+  Dos bloques pequeños como el estampado del pecho, la frase de la espalda y la etiqueta del dobladillo.
+-->
+<footer class="pie" id="info">
+  <div class="pecho">
+    <p>urborn.studio<br />est. MMXXVI</p>
+    <ul>
+      <li><a href={redes.instagram} target="_blank" rel="noopener">instagram</a></li>
+      <li><a href={redes.tiktok} target="_blank" rel="noopener">tiktok</a></li>
+      <li><a href={redes.whatsapp} target="_blank" rel="noopener">whatsapp</a></li>
+    </ul>
+  </div>
+
+  <p class="frase">born from the unknown.</p>
+
+  <p class="legal">© {anio} urborn</p>
+
+  <a class="etiqueta" href="#inicio" aria-label="Volver arriba">
+    <Image src={isotipo} alt="" width={64} />
+  </a>
+</footer>
+
+<style>
+  .pie {
+    position: relative;
+    padding: clamp(3rem, 7vw, 6.5rem) var(--margen) clamp(1.1rem, 2vw, 1.75rem);
+    background: var(--negro);
+    font-size: clamp(0.95rem, 1.25vw, 1.15rem);
+    line-height: 1.2;
+  }
+
+  .pecho {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+
+  .pecho a {
+    text-decoration: none;
+  }
+
+  .pecho a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  .frase {
+    margin-top: clamp(3rem, 7vw, 6rem);
+    text-align: center;
+    font-style: italic;
+    font-size: 0.85em;
+    color: var(--ceniza);
+  }
+
+  .legal {
+    margin-top: clamp(2.5rem, 5vw, 4.5rem);
+    font-size: 0.8em;
+    color: var(--ceniza);
+  }
+
+  .etiqueta {
+    position: absolute;
+    right: var(--margen);
+    bottom: 0;
+    display: grid;
+    place-items: center;
+    width: clamp(2.4rem, 3.4vw, 3.1rem);
+    aspect-ratio: 1;
+    background: var(--blanco);
+  }
+
+  .etiqueta img {
+    height: 52%;
+    width: auto;
+  }
+</style>

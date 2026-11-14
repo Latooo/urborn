@@ -1,0 +1,126 @@
+---
+import { Image } from 'astro:assets';
+import foto from '../assets/img/hero-new-collection.jpg';
+import { marca } from '../data/sitio';
+
+// El lema se repite dos veces seguidas para que la franja gire sin cortes.
+const copias = Array.from({ length: 2 });
+const repeticiones = Array.from({ length: 8 });
+---
+
+<div class="lema" aria-hidden="true">
+  <div class="pista">
+    {copias.map(() => <ul>{repeticiones.map(() => <li>{marca.lema}</li>)}</ul>)}
+  </div>
+</div>
+
+<section class="hero" id="inicio">
+  <Image
+    class="foto"
+    src={foto}
+    alt="Dos modelos con la camiseta The Origin de URBORN, uno de frente y otro de espaldas con el estampado del cuervo."
+    widths={[640, 960, 1280, 1680, foto.width]}
+    sizes="100vw"
+    priority
+  />
+
+  <h1 class="titular">
+    <span class="titulo grande">New collection</span>
+    <span class="chico">URBORN.STUDIO<sup>®</sup></span>
+  </h1>
+</section>
+
+<style>
+  .lema {
+    overflow: hidden;
+    padding-block: 0.38em;
+    background: var(--humo);
+    color: var(--ceniza);
+    font-size: clamp(0.78rem, 1.28vw, 1.05rem);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .pista {
+    display: flex;
+    width: max-content;
+    animation: correr 60s linear infinite;
+  }
+
+  .pista ul {
+    display: flex;
+    gap: 0.9em;
+    padding-right: 0.9em;
+  }
+
+  @keyframes correr {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+    /* Proporción del diseño en computador; en celular queda casi cuadrado para que quepan los dos modelos. */
+    height: clamp(22rem, 49.2vw, 86svh);
+    background: var(--negro);
+  }
+
+  .foto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 47% 58%;
+  }
+
+  /* Oscurece apenas la base de la foto para que el titular se lea sobre el muro gris. */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 55% 0 0;
+    background: linear-gradient(to bottom, transparent, rgb(0 0 0 / 0.3));
+    pointer-events: none;
+  }
+
+  .titular {
+    position: absolute;
+    z-index: 1;
+    left: var(--margen);
+    bottom: clamp(1rem, 3.1vw, 3rem);
+    font-weight: inherit;
+  }
+
+  .titular span {
+    display: block;
+  }
+
+  .grande {
+    font-size: clamp(2.9rem, 7.75vw, 9.25rem);
+    line-height: 0.78;
+    letter-spacing: -0.04em;
+  }
+
+  .chico {
+    font-size: clamp(1.4rem, 3.85vw, 4.6rem);
+    margin-top: -0.16em;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .chico sup {
+    font-size: 0.26em;
+    vertical-align: top;
+    position: relative;
+    top: 0.55em;
+    margin-left: 0.15em;
+    letter-spacing: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pista {
+      animation: none;
+    }
+  }
+</style>

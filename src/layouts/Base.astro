@@ -1,0 +1,48 @@
+---
+import '@fontsource-variable/roboto-condensed';
+import '@fontsource-variable/roboto-condensed/wght-italic.css';
+import '@fontsource-variable/jost';
+import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import fotoHero from '../assets/img/hero-new-collection.jpg';
+import { marca } from '../data/sitio';
+
+interface Props {
+  titulo?: string;
+  descripcion?: string;
+}
+
+const { titulo = `${marca.nombre} — ${marca.lema}`, descripcion = marca.descripcion } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const vistaPrevia = await getImage({ src: fotoHero, width: 1200, height: 630, format: 'jpg', fit: 'cover' });
+const urlVistaPrevia = Astro.site ? new URL(vistaPrevia.src, Astro.site).href : vistaPrevia.src;
+// La versión de prueba en GitHub Pages no debe aparecer en buscadores.
+const ocultarEnBuscadores = import.meta.env.PUBLIC_NOINDEX === 'true';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    {ocultarEnBuscadores && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/png" href={`${base}favicon.png`} />
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={marca.nombre} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:image" content={urlVistaPrevia} />
+    <meta property="og:locale" content="es_CO" />
+    {Astro.site && <meta property="og:url" content={Astro.url.href} />}
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <slot />
+  </body>
+</html>
