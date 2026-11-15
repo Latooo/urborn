@@ -42,3 +42,12 @@ export const universo = [
   { nombre: 'Evolution', texto: 'La transformación. Hacia dónde vamos.', publicado: false },
   { nombre: 'Unknown', texto: 'Lo que todavía no hemos descubierto.', publicado: false },
 ];
+
+// Invitación a hacer parte de la marca (pedido del cliente). Es a donde lleva la R de la barra.
+// El botón abre el WhatsApp de la marca con el mensaje ya escrito.
+export const unete = {
+  titulo: 'Haz parte de URBORN',
+  texto: 'Si quieres ser modelo o vestir nuestra marca, escríbenos y te contamos cómo.',
+  boton: 'Más información por WhatsApp',
+  mensaje: 'Hola URBORN, quiero más información para hacer parte de la marca.',
+};

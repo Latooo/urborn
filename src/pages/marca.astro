@@ -4,13 +4,16 @@ import Cabecera from '../components/Cabecera.astro';
 import Manifiesto from '../components/Manifiesto.astro';
 import Figura from '../components/Figura.astro';
 import Significado from '../components/Significado.astro';
-import Campana from '../components/Campana.astro';
 import Universo from '../components/Universo.astro';
+import Unete from '../components/Unete.astro';
 import Pie from '../components/Pie.astro';
 import { marca } from '../data/sitio';
 ---
 
-<!-- La marca: manifiesto, significado del nombre y universo de colecciones. Se llega por la i de la barra. -->
+<!--
+  La marca: manifiesto, significado del nombre, universo de colecciones y la invitación a hacer parte.
+  Se llega por la i de la barra; la R lleva directo a la invitación (#unete).
+-->
 <Base
   titulo={`Manifiesto — ${marca.nombre}`}
   descripcion="El manifiesto de URBORN, el significado del nombre y los capítulos de The URBORN Universe."
@@ -20,8 +23,8 @@ import { marca } from '../data/sitio';
     <Manifiesto />
     <Figura />
     <Significado />
-    <Campana />
     <Universo />
+    <Unete />
   </main>
   <Pie />
 </Base>

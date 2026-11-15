@@ -17,7 +17,8 @@ import foto from '../assets/img/hero-new-collection.jpg';
 <style>
   .marco {
     overflow: hidden;
-    height: clamp(20rem, 46vw, 82svh);
+    /* Quien la contiene puede fijar otro alto con --alto-campana. */
+    height: var(--alto-campana, clamp(20rem, 46vw, 82svh));
     background: var(--negro);
     view-timeline-name: --campana;
   }

@@ -1,0 +1,98 @@
+---
+import Campana from './Campana.astro';
+import { enlaceWhatsapp } from '../data/productos';
+import { unete } from '../data/sitio';
+import { trazoWhatsapp } from '../lib/iconos';
+---
+
+<!--
+  Invitación a hacer parte de la marca, como modelo o vistiéndola. Es a donde lleva la R de la barra.
+  Va con la foto de campaña porque muestra justo eso: dos modelos con la camiseta puesta.
+-->
+<section class="unete" id="unete" aria-labelledby="titulo-unete">
+  <div class="foto"><Campana /></div>
+  <div class="texto">
+    <h2 class="titulo" id="titulo-unete" data-revelar="mascara"><span>{unete.titulo}</span></h2>
+    <p class="invitacion" data-revelar>{unete.texto}</p>
+    <p data-revelar>
+      <a class="escribir" href={enlaceWhatsapp(unete.mensaje)} target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={trazoWhatsapp}></path></svg>
+        {unete.boton}
+      </a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .unete {
+    display: grid;
+    background: var(--hueso);
+    color: var(--negro);
+  }
+
+  .texto {
+    display: grid;
+    align-content: end;
+    justify-items: start;
+    gap: clamp(0.9rem, 1.6vw, 1.5rem);
+    padding: clamp(2rem, 6vw, 3.5rem) var(--margen) clamp(2.5rem, 8vw, 4rem);
+  }
+
+  h2 {
+    font-size: var(--t-titulo);
+    text-wrap: balance;
+  }
+
+  .invitacion {
+    max-width: 30ch;
+    font-size: var(--t-lead);
+    line-height: 1.35;
+  }
+
+  /* Mismo botón oscuro que el de pedir en la ficha. */
+  .escribir {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 1.05rem 1.5rem;
+    background: var(--negro);
+    color: var(--hueso);
+    font-weight: 600;
+    font-size: var(--t-texto);
+    line-height: 1.2;
+    text-decoration: none;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+
+  .escribir svg {
+    width: 1.35rem;
+    height: 1.35rem;
+    flex: none;
+  }
+
+  .escribir:hover {
+    background: var(--hueso);
+    color: var(--negro);
+    outline: 2px solid var(--negro);
+    outline-offset: -2px;
+  }
+
+  .escribir:active {
+    transform: translateY(1px);
+  }
+
+  /* Computador: la foto a la izquierda y la invitación a la derecha, todo en una pantalla. */
+  @media (min-width: 60rem) {
+    .unete {
+      grid-template-columns: 3fr 2fr;
+    }
+
+    .foto {
+      --alto-campana: 100%;
+      display: grid;
+      min-height: clamp(26rem, 42vw, 78svh);
+    }
+  }
+</style>

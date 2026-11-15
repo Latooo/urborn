@@ -18,10 +18,11 @@ npm run preview  # sirve dist/ para revisarlo
 ## Estructura
 
 - `src/pages/index.astro` — el inicio: portada, colección, banner de la figura y la frase de la marca con el paso al manifiesto.
-- `src/pages/marca.astro` — la página de la marca (`/marca/`): manifiesto, significado del nombre y universo de colecciones. Se llega por la i de la barra y por el botón "Leer el manifiesto" del inicio.
+- `src/pages/marca.astro` — la página de la marca (`/marca/`): manifiesto, significado del nombre, universo de colecciones y la invitación a hacer parte de la marca (`#unete`). Se llega por la i de la barra y por el botón "Leer el manifiesto" del inicio; la R de la barra lleva directo a la invitación.
 - `src/pages/camiseta/[codigo].astro` — la página de cada camiseta (`/camiseta/000/`...): frente y espalda, precio, tallas y botón de pedido por WhatsApp con el mensaje ya escrito; debajo, la foto de campaña y las demás camisetas.
-- `src/components/` — las secciones. Del inicio: animación de entrada, hero con la franja del lema, colección, figura (banner) y cierre con la frase. De la página de marca: manifiesto, significado y universo. Compartidos: barra superior, pie de página, `Tarjeta.astro` (la tarjeta de una camiseta) y `Campana.astro` (la foto de campaña a todo el ancho, en la ficha y en la página de marca).
-- `src/data/sitio.ts` — lema, enlaces de redes y WhatsApp, y los textos de marca: manifiesto, significado (URBAN + BORN) y los capítulos del universo.
+- `src/components/` — las secciones. Del inicio: animación de entrada, hero con la franja del lema, colección, figura (banner) y cierre con la frase. De la página de marca: manifiesto, significado, universo e invitación (`Unete.astro`). Compartidos: barra superior, pie de página, `Tarjeta.astro` (la tarjeta de una camiseta) y `Campana.astro` (la foto de campaña, en la ficha y junto a la invitación).
+- `src/data/sitio.ts` — lema, enlaces de redes y WhatsApp, y los textos de marca: manifiesto, significado (URBAN + BORN), los capítulos del universo y la invitación (con el mensaje que llega escrito a WhatsApp).
+- `src/lib/iconos.ts` — trazos de íconos que se usan en más de un sitio.
 - `src/data/productos.ts` — lista de camisetas (nombre, precio, tallas, descripción, imágenes) y el texto del pedido. Agregar o cambiar productos se hace aquí.
 - `src/lib/rutas.ts` — arma las rutas internas para que sirvan en Pages y en Netlify.
 - `src/assets/` — logos y fotos. Astro genera las versiones optimizadas al compilar.
@@ -73,7 +74,7 @@ variable se compila para la raíz, que es lo que necesita Netlify (comando `npm 
 
 - Fase 0, montaje: lista.
 - Fase 1, inicio según el diseño del cliente: en revisión. La versión celular y el pie de página son propuesta,
-  el diseño no los traía. El ícono de la R tiene destino provisional (sube al comienzo).
+  el diseño no los traía. El ícono de la R lleva a la invitación a hacer parte de la marca (`/marca/#unete`), que pidió el cliente; su botón abre WhatsApp.
 - Fase 2, página por camiseta y pedido por WhatsApp: en revisión. Las tallas (S, M, L, XL) y la descripción son
   provisionales hasta que el cliente confirme; están marcadas en `src/data/productos.ts`.
 - Las fotos del hero, el banner y la camiseta se ampliaron al doble y se limpiaron con Real-ESRGAN a partir de lo
