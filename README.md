@@ -23,8 +23,13 @@ npm run preview  # sirve dist/ para revisarlo
 - `src/components/` — las secciones. Del inicio: animación de entrada, hero con la franja del lema, colección, figura (banner) y cierre con la frase. De la página de marca: manifiesto, significado, universo e invitación (`Unete.astro`). Compartidos: barra superior, pie de página, `Tarjeta.astro` (la tarjeta de una prenda y la del próximo drop) y `Campana.astro` (la foto de campaña, en la ficha y junto a la invitación).
 - `src/data/sitio.ts` — lema, enlaces de redes y WhatsApp, y los textos de marca: manifiesto, significado (URBAN + BORN), los capítulos del universo y la invitación (con el mensaje que llega escrito a WhatsApp).
 - `src/lib/iconos.ts` — trazos de íconos que se usan en más de un sitio.
+- `src/components/FotoPrenda.astro` — foto de una prenda: sale en AVIF (guarda el color a resolución completa, así el rojo
+  de los estampados queda nítido) con WebP de respaldo. El `sizes` de cada uso debe cubrir el ancho real de la prenda:
+  si se queda corto, el navegador amplía una imagen más pequeña y se ve borrosa.
 - `src/data/productos.ts` — lista de prendas (tipo, tono, precio, tallas, descripción), la tarjeta del próximo drop y el texto del pedido. Agregar o cambiar productos se hace aquí.
-- `src/assets/img/prendas/` — frente y espalda de cada prenda (`<código>-frente.png`, `<código>-espalda.png`), recortadas de los archivos del cliente y todas en el mismo lienzo, más la silueta del próximo drop. Para agregar una prenda: sus dos imágenes aquí y una entrada en `productos.ts`.
+- `src/assets/img/prendas/` — frente y espalda de cada prenda (`<código>-frente.png`, `<código>-espalda.png`), recortadas de los archivos del cliente y todas en el mismo lienzo, más la silueta del próximo drop.
+  Los mockups del cliente vienen calcados (vectorizados): contorno ondulado y tela con manchas planas. Al recortarlos
+  se suaviza el contorno y el sombreado de la tela, sin tocar los estampados (se comprobó que no cambian). Para agregar una prenda: sus dos imágenes aquí y una entrada en `productos.ts`.
 - `src/lib/rutas.ts` — arma las rutas internas para que sirvan en Pages y en Netlify.
 - `src/assets/` — logos y fotos. Astro genera las versiones optimizadas al compilar.
 - `public/` — favicon.

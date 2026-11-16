@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import FotoPrenda from './FotoPrenda.astro';
 import { coleccion } from '../data/productos';
 import { universo } from '../data/sitio';
 import { ruta } from '../lib/rutas';
@@ -27,19 +27,17 @@ const tamanos = '(min-width: 44rem) 14rem, 42vw';
             {capitulo.publicado && <a href={ruta('#coleccion')}>Ver la colección</a>}
             {capitulo.publicado && (
               <div class="muestra">
-                <Image
+                <FotoPrenda
                   src={prenda.frente}
                   alt={`Camiseta de ${coleccion.nombre}, vista de frente`}
                   widths={anchos}
                   sizes={tamanos}
-                  quality={90}
                 />
-                <Image
+                <FotoPrenda
                   src={prenda.espalda}
                   alt={`Camiseta de ${coleccion.nombre}, vista de espaldas`}
                   widths={anchos}
                   sizes={tamanos}
-                  quality={90}
                 />
               </div>
             )}

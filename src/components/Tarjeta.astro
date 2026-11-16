@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import FotoPrenda from './FotoPrenda.astro';
 import { formatoPrecio, type Producto, type ProximoDrop } from '../data/productos';
 import { ruta } from '../lib/rutas';
 
@@ -12,8 +12,9 @@ interface Props {
   tamanos?: string;
 }
 
-const { producto, proximo, tamanos = '(min-width: 44rem) 25vw, 42vw' } = Astro.props;
-const anchos = [240, 360, 480, 720, 960];
+// El ancho real de la prenda es un tercio (computador) o la mitad (celular) menos los márgenes de la tarjeta.
+const { producto, proximo, tamanos = '(min-width: 44rem) 26vw, 42vw' } = Astro.props;
+const anchos = [240, 360, 480, 720, 960, 1280];
 ---
 
 <!--
@@ -26,15 +27,14 @@ const anchos = [240, 360, 480, 720, 960];
     producto && (
       <a class="enlace" href={ruta(`prenda/${producto.codigo}/`)} data-revelar>
         <span class="fotos" style={`view-transition-name: prenda-${producto.codigo}`}>
-          <Image
+          <FotoPrenda
             class="frente"
             src={producto.frente}
             alt={`${producto.nombre}, vista de frente`}
             widths={anchos}
             sizes={tamanos}
-            quality={90}
           />
-          <Image class="espalda" src={producto.espalda} alt="" widths={anchos} sizes={tamanos} quality={90} />
+          <FotoPrenda class="espalda" src={producto.espalda} alt="" widths={anchos} sizes={tamanos} />
         </span>
         <h3 class="titulo">{producto.nombre}</h3>
         <p class="precio">{formatoPrecio(producto.precio)}</p>
@@ -45,7 +45,7 @@ const anchos = [240, 360, 480, 720, 960];
     proximo && (
       <div class="enlace" data-revelar>
         <span class="fotos">
-          <Image src={proximo.imagen} alt="" widths={anchos} sizes={tamanos} quality={90} />
+          <FotoPrenda src={proximo.imagen} alt="" widths={anchos} sizes={tamanos} />
         </span>
         <h3 class="titulo">{proximo.titulo}</h3>
         <p class="precio">{proximo.aviso}</p>

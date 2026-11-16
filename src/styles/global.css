@@ -73,6 +73,10 @@ ol {
   list-style: none;
 }
 
+picture {
+  display: contents;
+}
+
 img {
   display: block;
   max-width: 100%;

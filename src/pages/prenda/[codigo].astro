@@ -1,10 +1,10 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Cabecera from '../../components/Cabecera.astro';
 import Pie from '../../components/Pie.astro';
 import Tarjeta from '../../components/Tarjeta.astro';
 import Campana from '../../components/Campana.astro';
+import FotoPrenda from '../../components/FotoPrenda.astro';
 import { trazoWhatsapp } from '../../lib/iconos';
 import { coleccion, enlaceWhatsapp, formatoPrecio, mensajePedido, type Producto } from '../../data/productos';
 import { marca } from '../../data/sitio';
@@ -30,6 +30,7 @@ const estaPagina = Astro.site ? Astro.url.href : undefined;
 const pedido = (talla?: string) => enlaceWhatsapp(mensajePedido(producto, talla, estaPagina));
 
 const anchos = [480, 720, 960, 1280, 1600];
+// Computador: dos vistas dentro del 60 % de la pantalla, menos márgenes. Celular: la fila que se desliza.
 const tamanos = '(min-width: 60rem) 27vw, 72vw';
 
 ---
@@ -49,23 +50,21 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
       <div class="galeria" id="inicio">
         <figure style={`view-transition-name: prenda-${producto.codigo}`}>
           <figcaption>frente</figcaption>
-          <Image
+          <FotoPrenda
             src={producto.frente}
             alt={`${producto.nombre}, vista de frente`}
             widths={anchos}
             sizes={tamanos}
-            quality={90}
             priority
           />
         </figure>
         <figure>
           <figcaption>espalda</figcaption>
-          <Image
+          <FotoPrenda
             src={producto.espalda}
             alt={`${producto.nombre}, vista de espalda`}
             widths={anchos}
             sizes={tamanos}
-            quality={90}
             loading="eager"
           />
         </figure>
@@ -114,7 +113,7 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
         {
           otras.map((otra) => (
             <li>
-              <Tarjeta producto={otra} tamanos="(min-width: 60rem) 17vw, 42vw" />
+              <Tarjeta producto={otra} tamanos="(min-width: 60rem) 18vw, 42vw" />
             </li>
           ))
         }
