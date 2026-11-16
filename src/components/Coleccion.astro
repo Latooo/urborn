@@ -33,9 +33,8 @@ import { coleccion, proximoDrop } from '../data/productos';
   }
 
   /*
-   * Mosaico de lado a lado, sin separación: cada tarjeta trae su fondo según el tono de la prenda
-   * (ver Tarjeta.astro), así el orden o el número de prendas puede cambiar sin tocar colores.
-   * Las prendas de una fila entran una tras otra (--i).
+   * Mosaico de lado a lado, sin separación: todas las tarjetas van sobre Bone (ver Tarjeta.astro),
+   * así la colección es un solo campo de color. Las prendas de una fila entran una tras otra (--i).
    */
   .rejilla {
     display: grid;

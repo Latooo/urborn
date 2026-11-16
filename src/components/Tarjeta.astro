@@ -19,10 +19,10 @@ const anchos = [240, 360, 480, 720, 960, 1280];
 
 <!--
   Tarjeta de una prenda: lleva a su página. Frente y espalda van apilados y al pasar el cursor
-  (o enfocar con teclado) se ve la espalda. La tarjeta pone su propio fondo según el tono de la
-  prenda, para que una negra no quede sobre oscuro ni una blanca sobre claro.
+  (o enfocar con teclado) se ve la espalda. Todas las tarjetas van sobre el mismo fondo, como en la
+  tienda de referencia: la colección se lee como un solo bloque.
 -->
-<div class:list={['tarjeta', producto?.tono, { proxima: proximo }]}>
+<div class="tarjeta">
   {
     producto && (
       <a class="enlace" href={ruta(`prenda/${producto.codigo}/`)} data-revelar>
@@ -55,7 +55,6 @@ const anchos = [240, 360, 480, 720, 960, 1280];
 </div>
 
 <style>
-  /* Prenda oscura sobre Bone (lo normal); clara sobre Asphalt; el próximo drop sobre Black. */
   .tarjeta {
     --secundario: var(--tenue-claro);
     height: 100%;
@@ -63,18 +62,6 @@ const anchos = [240, 360, 480, 720, 960, 1280];
     padding: clamp(1rem, 2.4vw, 2.5rem) var(--margen) clamp(1.4rem, 3vw, 3.25rem);
     background: var(--hueso);
     color: var(--negro);
-  }
-
-  .clara {
-    --secundario: var(--tenue-oscuro);
-    background: var(--asfalto);
-    color: var(--hueso);
-  }
-
-  .proxima {
-    --secundario: var(--tenue-oscuro);
-    background: var(--negro);
-    color: var(--hueso);
   }
 
   .enlace {

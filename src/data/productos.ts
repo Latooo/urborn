@@ -6,11 +6,6 @@ export interface Producto {
   codigo: string;
   nombre: string;
   tipo: 'camiseta' | 'crop top';
-  /**
-   * Tono de la prenda. Decide el fondo sobre el que se muestra para que no se pierda:
-   * las oscuras van sobre Bone y las claras sobre Asphalt.
-   */
-  tono: 'oscura' | 'clara';
   /** Precio en pesos colombianos, sin puntos ni símbolo. */
   precio: number;
   frente: ImageMetadata;
@@ -37,11 +32,10 @@ const PRECIO_PROVISIONAL = 90000;
 const TALLAS_PROVISIONALES = ['S', 'M', 'L', 'XL'];
 
 // Las descripciones solo dicen lo que se ve estampado en cada prenda.
-const prendas: Pick<Producto, 'codigo' | 'tipo' | 'tono' | 'descripcion' | 'enCampana'>[] = [
+const prendas: Pick<Producto, 'codigo' | 'tipo' | 'descripcion' | 'enCampana'>[] = [
   {
     codigo: '000',
     tipo: 'camiseta',
-    tono: 'oscura',
     enCampana: true,
     descripcion:
       'Camiseta negra. Al frente lleva «urb.000 the origin, est. MMXXVI» en el pecho. ' +
@@ -50,7 +44,6 @@ const prendas: Pick<Producto, 'codigo' | 'tipo' | 'tono' | 'descripcion' | 'enCa
   {
     codigo: '001',
     tipo: 'camiseta',
-    tono: 'oscura',
     descripcion:
       'Camiseta negra. Al frente, «A[R]T» en el pecho con el lema «we were never made to fit in.». ' +
       'En la espalda, la mirada del ave y la frase «Everything begins somewhere».',
@@ -58,7 +51,6 @@ const prendas: Pick<Producto, 'codigo' | 'tipo' | 'tono' | 'descripcion' | 'enCa
   {
     codigo: '002',
     tipo: 'crop top',
-    tono: 'oscura',
     descripcion:
       'Crop top negro. Al frente, el logo de URBORN con la frase «born from the unknown.». ' +
       'En la espalda, el cuervo y el lema «we were never made to fit in.».',
@@ -66,7 +58,6 @@ const prendas: Pick<Producto, 'codigo' | 'tipo' | 'tono' | 'descripcion' | 'enCa
   {
     codigo: '003',
     tipo: 'camiseta',
-    tono: 'clara',
     descripcion:
       'Camiseta blanca. Al frente, «RBRN» en rojo con la frase «born from the unknown.». ' +
       'En la espalda, las alas negras con URBORN en rojo y el lema «we were never made to fit in.».',
@@ -74,7 +65,6 @@ const prendas: Pick<Producto, 'codigo' | 'tipo' | 'tono' | 'descripcion' | 'enCa
   {
     codigo: '004',
     tipo: 'crop top',
-    tono: 'clara',
     descripcion:
       'Crop top blanco. Al frente, el logo de URBORN en rojo con la frase «born from the unknown.». ' +
       'En la espalda, las alas negras con URBORN en rojo y el lema «we were never made to fit in.».',

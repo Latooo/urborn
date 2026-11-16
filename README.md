@@ -42,10 +42,9 @@ Sale de la guía que entregó el cliente. Los valores están en `src/styles/glob
 - Paleta: Black `#111214`, Asphalt `#292B2F`, Concrete `#777777`, Bone `#D6D2C9`. Blood `#641F29` queda reservado
   como acento para colecciones puntuales y hoy no se usa.
 - Tipografía: Anton para titulares e Inter para texto (las dos se sirven desde el propio sitio, con Fontsource).
-- Cada prenda va sobre el fondo que la hace ver: las oscuras sobre Bone y las claras sobre Asphalt (campo `tono` en `productos.ts`).
-  Por eso la colección es un mosaico de lado a lado y no franjas por fila: el orden o el número de prendas puede cambiar sin tocar colores.
-  En la ficha pasa lo mismo: la mitad de la prenda y la de los datos intercambian Asphalt y Bone según el tono.
-- El próximo drop es una tarjeta más de la colección: la silueta con «???» sobre Black y el aviso «Próximamente». No lleva a ninguna página.
+- Todas las prendas van sobre Bone, en la colección y en la ficha, como en la tienda de referencia (Mattelsa):
+  la colección es un solo campo de color. En la ficha, la prenda va sobre Bone y los datos sobre Asphalt.
+- El próximo drop es una tarjeta más de la colección: la silueta con «???» y el aviso «Próximamente». No lleva a ninguna página.
 - Logos e isotipo en Bone. Al banner se le subieron los negros al Black de marca para que se funda con la página.
 - El manifiesto va en inglés, tal como lo entregó el cliente.
 - El inicio solo muestra la frase del manifiesto; el texto completo de marca vive en `/marca/` para no cargar el inicio de texto. El ícono de la i de la barra lleva a esa página.

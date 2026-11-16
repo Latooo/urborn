@@ -43,10 +43,9 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
 
   <main class="ficha" id="contenido">
     <!--
-      Una mitad con la prenda y la otra con los datos, en Asphalt y Bone. La prenda queda sobre el
-      fondo que la hace ver: las oscuras sobre Bone y las claras sobre Asphalt; los datos, al contrario.
+      Una mitad con la prenda, sobre Bone como en la colección, y la otra con los datos, sobre Asphalt.
     -->
-    <div class:list={['principal', producto.tono]}>
+    <div class="principal">
       <div class="galeria" id="inicio">
         <figure style={`view-transition-name: prenda-${producto.codigo}`}>
           <figcaption>frente</figcaption>
@@ -143,25 +142,15 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
     background: var(--negro);
   }
 
-  /* Prenda clara: galería en Asphalt y datos en Bone. */
+  /* Galería en Bone (igual que la colección) y datos en Asphalt. */
   .principal {
-    --galeria-fondo: var(--asfalto);
-    --galeria-tenue: var(--tenue-oscuro);
-    --datos-fondo: var(--hueso);
-    --datos-texto: var(--negro);
-    --datos-tenue: var(--tenue-claro);
-    --talla-fondo: #c4c0b7; /* un paso más oscuro que Bone */
-    display: grid;
-  }
-
-  /* Prenda oscura: los dos colores se intercambian. */
-  .principal.oscura {
     --galeria-fondo: var(--hueso);
     --galeria-tenue: var(--tenue-claro);
     --datos-fondo: var(--asfalto);
     --datos-texto: var(--hueso);
     --datos-tenue: var(--tenue-oscuro);
     --talla-fondo: #3d4046; /* un paso más claro que Asphalt */
+    display: grid;
   }
 
   /* Celular: frente y espalda en una fila que se desliza; la segunda prenda asoma a propósito. */
