@@ -10,7 +10,7 @@ import { coleccion, enlaceWhatsapp, formatoPrecio, mensajePedido, type Producto 
 import { marca } from '../../data/sitio';
 import { ruta } from '../../lib/rutas';
 
-// Una página por camiseta: /camiseta/000/, /camiseta/001/...
+// Una página por prenda: /prenda/000/, /prenda/001/...
 export function getStaticPaths() {
   return coleccion.productos.map((producto) => ({
     params: { codigo: producto.codigo },
@@ -25,7 +25,7 @@ interface Props {
 const { producto } = Astro.props;
 const otras = coleccion.productos.filter((otra) => otra.codigo !== producto.codigo);
 
-// El enlace a esta página va dentro del mensaje para que quien atiende sepa qué camiseta es.
+// El enlace a esta página va dentro del mensaje para que quien atiende sepa qué prenda es.
 const estaPagina = Astro.site ? Astro.url.href : undefined;
 const pedido = (talla?: string) => enlaceWhatsapp(mensajePedido(producto, talla, estaPagina));
 
@@ -41,8 +41,11 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
   <Cabecera />
 
   <main class="ficha" id="contenido">
-    <!-- Mitad negra con la prenda, mitad blanca con los datos: las mismas franjas del inicio. -->
-    <div class="principal">
+    <!--
+      Una mitad con la prenda y la otra con los datos, en Asphalt y Bone. La prenda queda sobre el
+      fondo que la hace ver: las oscuras sobre Bone y las claras sobre Asphalt; los datos, al contrario.
+    -->
+    <div class:list={['principal', producto.tono]}>
       <div class="galeria" id="inicio">
         <figure style={`view-transition-name: prenda-${producto.codigo}`}>
           <figcaption>frente</figcaption>
@@ -59,7 +62,7 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
           <figcaption>espalda</figcaption>
           <Image
             src={producto.espalda}
-            alt={`${producto.nombre}, vista de espalda con el logo de URBORN y el cuervo`}
+            alt={`${producto.nombre}, vista de espalda`}
             widths={anchos}
             sizes={tamanos}
             quality={90}
@@ -93,10 +96,17 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
       </div>
     </div>
 
-    <section class="puesta" aria-labelledby="titulo-puesta">
-      <h2 class="titulo" id="titulo-puesta" data-revelar="mascara"><span>Así se ve puesta</span></h2>
-      <Campana />
-    </section>
+    {
+      /* La foto de campaña solo va en la prenda que sale en ella. */
+      producto.enCampana && (
+        <section class="puesta" aria-labelledby="titulo-puesta">
+          <h2 class="titulo" id="titulo-puesta" data-revelar="mascara">
+            <span>Así se ve puesta</span>
+          </h2>
+          <Campana />
+        </section>
+      )
+    }
 
     <section class="otras" aria-labelledby="titulo-otras">
       <h2 class="titulo" id="titulo-otras" data-revelar="mascara"><span>Más de {coleccion.nombre}</span></h2>
@@ -104,7 +114,7 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
         {
           otras.map((otra) => (
             <li>
-              <Tarjeta producto={otra} tamanos="(min-width: 60rem) 16vw, (min-width: 44rem) 28vw, 42vw" />
+              <Tarjeta producto={otra} tamanos="(min-width: 60rem) 17vw, 42vw" />
             </li>
           ))
         }
@@ -134,8 +144,25 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
     background: var(--negro);
   }
 
+  /* Prenda clara: galería en Asphalt y datos en Bone. */
   .principal {
+    --galeria-fondo: var(--asfalto);
+    --galeria-tenue: var(--tenue-oscuro);
+    --datos-fondo: var(--hueso);
+    --datos-texto: var(--negro);
+    --datos-tenue: var(--tenue-claro);
+    --talla-fondo: #c4c0b7; /* un paso más oscuro que Bone */
     display: grid;
+  }
+
+  /* Prenda oscura: los dos colores se intercambian. */
+  .principal.oscura {
+    --galeria-fondo: var(--hueso);
+    --galeria-tenue: var(--tenue-claro);
+    --datos-fondo: var(--asfalto);
+    --datos-texto: var(--hueso);
+    --datos-tenue: var(--tenue-oscuro);
+    --talla-fondo: #3d4046; /* un paso más claro que Asphalt */
   }
 
   /* Celular: frente y espalda en una fila que se desliza; la segunda prenda asoma a propósito. */
@@ -148,7 +175,7 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
     scroll-snap-type: x mandatory;
     scroll-padding-inline: var(--margen);
     padding: clamp(1.25rem, 4vw, 2.5rem) var(--margen) clamp(1rem, 3vw, 2rem);
-    background: var(--asfalto); /* sobre Asphalt la prenda negra se distingue */
+    background: var(--galeria-fondo);
     scrollbar-width: none;
   }
 
@@ -170,13 +197,13 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
     margin-bottom: 0.4rem;
     text-align: center;
     font-size: var(--t-nota);
-    color: var(--tenue-oscuro);
+    color: var(--galeria-tenue);
   }
 
   .datos {
     padding: clamp(1.75rem, 6vw, 2.5rem) var(--margen) clamp(2.5rem, 8vw, 4rem);
-    background: var(--hueso);
-    color: var(--negro);
+    background: var(--datos-fondo);
+    color: var(--datos-texto);
   }
 
   h1 {
@@ -230,7 +257,7 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
     min-width: 3.1rem;
     height: 3.1rem;
     padding-inline: 0.6rem;
-    background: #c4c0b7; /* un paso más oscuro que Bone */
+    background: var(--talla-fondo);
     font-weight: 600;
     font-size: var(--t-texto);
     transition:
@@ -239,19 +266,19 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
   }
 
   .tallas input:checked + span {
-    background: var(--negro);
-    color: var(--hueso);
+    background: var(--datos-texto);
+    color: var(--datos-fondo);
   }
 
   .tallas input:focus-visible + span {
-    outline: 2px solid var(--negro);
+    outline: 2px solid var(--datos-texto);
     outline-offset: 3px;
   }
 
   @media (hover: hover) {
     .tallas label:hover span {
-      background: var(--negro);
-      color: var(--hueso);
+      background: var(--datos-texto);
+      color: var(--datos-fondo);
     }
   }
 
@@ -262,8 +289,8 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
     gap: 0.7rem;
     margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
     padding: 1.05rem 1.5rem;
-    background: var(--negro);
-    color: var(--hueso);
+    background: var(--datos-texto);
+    color: var(--datos-fondo);
     font-weight: 600;
     font-size: var(--t-texto);
     text-decoration: none;
@@ -279,9 +306,9 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
   }
 
   .pedir:hover {
-    background: var(--hueso);
-    color: var(--negro);
-    outline: 2px solid var(--negro);
+    background: var(--datos-fondo);
+    color: var(--datos-texto);
+    outline: 2px solid var(--datos-texto);
     outline-offset: -2px;
   }
 
@@ -292,7 +319,7 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
   .nota {
     margin-top: 0.7rem;
     font-size: var(--t-nota);
-    color: var(--tenue-claro);
+    color: var(--datos-tenue);
   }
 
   /* Entrada de los datos al cargar: uno tras otro y todo quieto antes de 1,2 s. */
@@ -328,7 +355,7 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
     }
   }
 
-  /* La foto de campaña: cómo queda la camiseta puesta, de frente y de espaldas. */
+  /* La foto de campaña: cómo queda la prenda puesta, de frente y de espaldas. */
   .puesta {
     padding-top: clamp(4rem, 9vw, 9rem);
     background: var(--negro);
@@ -344,9 +371,8 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
     margin-bottom: clamp(1rem, 2.4vw, 2.5rem);
   }
 
-  /* Las demás camisetas, sobre blanco. */
+  /* Las demás prendas: el mismo mosaico del inicio, de lado a lado, sobre Bone. */
   .otras {
-    --secundario: var(--tenue-claro);
     padding: clamp(4rem, 9vw, 9rem) 0 clamp(3rem, 7vw, 7rem);
     background: var(--hueso);
     color: var(--negro);
@@ -355,9 +381,7 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
   .otras ul {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: clamp(1.5rem, 3vw, 3rem) clamp(1rem, 2.4vw, 2.5rem);
     margin-top: clamp(1.25rem, 2.6vw, 2.75rem);
-    padding-inline: var(--margen);
   }
 
   .otras li:nth-child(2n) {
@@ -370,24 +394,6 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
     font-size: var(--t-texto);
     font-weight: 600;
     text-underline-offset: 0.22em;
-  }
-
-  @media (min-width: 44rem) {
-    .otras ul {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .otras li:nth-child(2n) {
-      --i: 0;
-    }
-
-    .otras li:nth-child(3n + 2) {
-      --i: 1;
-    }
-
-    .otras li:nth-child(3n) {
-      --i: 2;
-    }
   }
 
   /* Computador: prenda a la izquierda (frente y espalda lado a lado), datos a la derecha. */
@@ -415,27 +421,23 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
     }
 
     .otras ul {
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
 
     .otras li:nth-child(n) {
       --i: 0;
     }
 
-    .otras li:nth-child(5n + 2) {
+    .otras li:nth-child(4n + 2) {
       --i: 1;
     }
 
-    .otras li:nth-child(5n + 3) {
+    .otras li:nth-child(4n + 3) {
       --i: 2;
     }
 
-    .otras li:nth-child(5n + 4) {
+    .otras li:nth-child(4n) {
       --i: 3;
-    }
-
-    .otras li:nth-child(5n) {
-      --i: 4;
     }
   }
 

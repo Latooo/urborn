@@ -5,7 +5,7 @@ export const marca = {
   nombre: 'URBORN',
   lema: 'we were never made to fit in.',
   categoria: 'Underground streetwear',
-  descripcion: 'URBORN, underground streetwear. Camisetas estampadas de la colección The Origin.',
+  descripcion: 'URBORN, underground streetwear. Camisetas y crop tops estampados de la colección The Origin.',
   concepto: 'La identidad de quienes no necesitan encajar para encontrar su lugar.',
 };
 

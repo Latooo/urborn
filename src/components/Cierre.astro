@@ -5,7 +5,8 @@ import { ruta } from '../lib/rutas';
 
 <!--
   Cierre del inicio: la frase de la marca y el paso a la página con el manifiesto completo.
-  Sigue a la figura sin corte de color. Al entrar a /marca/ la frase viaja hasta el título de esa página.
+  Va sobre Bone para que el final de la página no sea un tramo largo de negro (figura, frase y pie).
+  Al entrar a /marca/ la frase viaja hasta el título de esa página.
 -->
 <section class="cierre" aria-labelledby="titulo-cierre">
   <h2 class="titulo" id="titulo-cierre" data-revelar="mascara"><span>{manifiesto.titulo}</span></h2>
@@ -17,7 +18,20 @@ import { ruta } from '../lib/rutas';
     display: grid;
     gap: clamp(1.5rem, 3vw, 3rem);
     padding: clamp(3rem, 7vw, 7rem) var(--margen);
+    background: var(--hueso);
+    color: var(--negro);
+  }
+
+  /* El botón global es para fondo oscuro; aquí va invertido. */
+  .boton {
     background: var(--negro);
+    color: var(--hueso);
+  }
+
+  .boton:hover {
+    background: var(--hueso);
+    color: var(--negro);
+    outline-color: var(--negro);
   }
 
   /* En celular va un poco más pequeño que el titular del hero para que quepa en dos líneas. */

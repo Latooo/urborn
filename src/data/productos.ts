@@ -1,41 +1,110 @@
 import type { ImageMetadata } from 'astro';
-import camisetaFrente from '../assets/img/camiseta-origin-frente.png';
-import camisetaEspalda from '../assets/img/camiseta-origin-espalda.png';
+import siluetaProximo from '../assets/img/prendas/proximo-drop.png';
 import { redes } from './sitio';
 
 export interface Producto {
   codigo: string;
   nombre: string;
+  tipo: 'camiseta' | 'crop top';
+  /**
+   * Tono de la prenda. Decide el fondo sobre el que se muestra para que no se pierda:
+   * las oscuras van sobre Bone y las claras sobre Asphalt.
+   */
+  tono: 'oscura' | 'clara';
   /** Precio en pesos colombianos, sin puntos ni símbolo. */
   precio: number;
   frente: ImageMetadata;
   espalda: ImageMetadata;
   tallas: string[];
   descripcion: string;
+  /** Es la prenda que sale en la foto de campaña. */
+  enCampana?: boolean;
 }
 
-// PROVISIONAL: el cliente no ha confirmado tallas ni datos de la prenda.
-const TALLAS_PROVISIONALES = ['S', 'M', 'L', 'XL'];
-const DESCRIPCION =
-  'Camiseta negra estampada de la colección The Origin. Al frente lleva un estampado pequeño en el pecho. ' +
-  'En la espalda, el logo de URBORN, el cuervo y el lema «we were never made to fit in.».';
+// Las fotos se toman por nombre de archivo: src/assets/img/prendas/<código>-frente.png y <código>-espalda.png.
+// Salen de los archivos del cliente con scripts de recorte; todas comparten lienzo y ancho de prenda.
+const fotos = import.meta.glob<{ default: ImageMetadata }>('../assets/img/prendas/*.png', { eager: true });
 
-// Lista tal como viene en el diseño del cliente (incluido el salto de 001 a 003).
-// Todas usan la misma imagen hasta que lleguen las fotos de cada referencia.
+function foto(codigo: string, lado: 'frente' | 'espalda'): ImageMetadata {
+  const archivo = fotos[`../assets/img/prendas/${codigo}-${lado}.png`];
+  if (!archivo) throw new Error(`Falta la foto ${codigo}-${lado}.png en src/assets/img/prendas/`);
+  return archivo.default;
+}
+
+// PROVISIONAL: el cliente no ha confirmado nombres, precios ni tallas. Los códigos siguen el de la
+// primera prenda, que lleva «urb.000» estampado; el precio es el del diseño inicial de la página.
+const PRECIO_PROVISIONAL = 90000;
+const TALLAS_PROVISIONALES = ['S', 'M', 'L', 'XL'];
+
+// Las descripciones solo dicen lo que se ve estampado en cada prenda.
+const prendas: Pick<Producto, 'codigo' | 'tipo' | 'tono' | 'descripcion' | 'enCampana'>[] = [
+  {
+    codigo: '000',
+    tipo: 'camiseta',
+    tono: 'oscura',
+    enCampana: true,
+    descripcion:
+      'Camiseta negra. Al frente lleva «urb.000 the origin, est. MMXXVI» en el pecho. ' +
+      'En la espalda, el logo de URBORN con el lema «we were never made to fit in.», el cuervo y la frase «born from the unknown.».',
+  },
+  {
+    codigo: '001',
+    tipo: 'camiseta',
+    tono: 'oscura',
+    descripcion:
+      'Camiseta negra. Al frente, «A[R]T» en el pecho con el lema «we were never made to fit in.». ' +
+      'En la espalda, la mirada del ave y la frase «Everything begins somewhere».',
+  },
+  {
+    codigo: '002',
+    tipo: 'crop top',
+    tono: 'oscura',
+    descripcion:
+      'Crop top negro. Al frente, el logo de URBORN con la frase «born from the unknown.». ' +
+      'En la espalda, el cuervo y el lema «we were never made to fit in.».',
+  },
+  {
+    codigo: '003',
+    tipo: 'camiseta',
+    tono: 'clara',
+    descripcion:
+      'Camiseta blanca. Al frente, «RBRN» en rojo con la frase «born from the unknown.». ' +
+      'En la espalda, las alas negras con URBORN en rojo y el lema «we were never made to fit in.».',
+  },
+  {
+    codigo: '004',
+    tipo: 'crop top',
+    tono: 'clara',
+    descripcion:
+      'Crop top blanco. Al frente, el logo de URBORN en rojo con la frase «born from the unknown.». ' +
+      'En la espalda, las alas negras con URBORN en rojo y el lema «we were never made to fit in.».',
+  },
+];
+
+const NOMBRE_TIPO = { camiseta: 'Camiseta', 'crop top': 'Crop top' } as const;
+
 export const coleccion = {
   nombre: 'The Origin',
-  productos: ['000', '001', '003', '004', '005', '006'].map(
-    (codigo): Producto => ({
-      codigo,
-      nombre: `Camiseta ${codigo}`,
-      precio: 90000,
-      frente: camisetaFrente,
-      espalda: camisetaEspalda,
+  productos: prendas.map(
+    (prenda): Producto => ({
+      ...prenda,
+      nombre: `${NOMBRE_TIPO[prenda.tipo]} ${prenda.codigo}`,
+      precio: PRECIO_PROVISIONAL,
+      frente: foto(prenda.codigo, 'frente'),
+      espalda: foto(prenda.codigo, 'espalda'),
       tallas: TALLAS_PROVISIONALES,
-      descripcion: DESCRIPCION,
     }),
   ),
 };
+
+/** La tarjeta del siguiente drop: todavía no se muestra la prenda, solo la silueta con «???». */
+export const proximoDrop = {
+  titulo: 'Próximo drop',
+  aviso: 'Próximamente',
+  imagen: siluetaProximo,
+};
+
+export type ProximoDrop = typeof proximoDrop;
 
 const pesos = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 });
 
@@ -45,7 +114,8 @@ export function formatoPrecio(valor: number): string {
 
 /** Texto que llega escrito al chat de WhatsApp. La talla se agrega cuando la persona la elige. */
 export function mensajePedido(producto: Producto, talla?: string, enlace?: string): string {
-  const partes = [`Hola URBORN, quiero pedir la ${producto.nombre} (${coleccion.nombre})`];
+  const articulo = producto.tipo === 'camiseta' ? 'la' : 'el';
+  const partes = [`Hola URBORN, quiero pedir ${articulo} ${producto.nombre} (${coleccion.nombre})`];
   if (talla) partes.push(`talla ${talla}`);
   return partes.join(', ') + '.' + (enlace ? ` ${enlace}` : '');
 }

@@ -1,41 +1,85 @@
 ---
 import { Image } from 'astro:assets';
-import { formatoPrecio, type Producto } from '../data/productos';
+import { formatoPrecio, type Producto, type ProximoDrop } from '../data/productos';
 import { ruta } from '../lib/rutas';
 
 interface Props {
-  producto: Producto;
+  /** La prenda que muestra la tarjeta. */
+  producto?: Producto;
+  /** En lugar de una prenda: la tarjeta del siguiente drop, que no lleva a ninguna página. */
+  proximo?: ProximoDrop;
   /** Ancho con que se ve la prenda, para que el navegador pida la imagen del tamaño justo. */
   tamanos?: string;
 }
 
-const { producto, tamanos = '(min-width: 44rem) 21vw, 38vw' } = Astro.props;
+const { producto, proximo, tamanos = '(min-width: 44rem) 25vw, 42vw' } = Astro.props;
 const anchos = [240, 360, 480, 720, 960];
 ---
 
 <!--
-  Tarjeta de una camiseta: lleva a su página. Frente y espalda van apilados y al pasar el cursor
-  (o enfocar con teclado) se ve la espalda. El color del texto lo pone quien la contiene.
+  Tarjeta de una prenda: lleva a su página. Frente y espalda van apilados y al pasar el cursor
+  (o enfocar con teclado) se ve la espalda. La tarjeta pone su propio fondo según el tono de la
+  prenda, para que una negra no quede sobre oscuro ni una blanca sobre claro.
 -->
-<a class="enlace" href={ruta(`camiseta/${producto.codigo}/`)} data-revelar>
-  <span class="fotos" style={`view-transition-name: prenda-${producto.codigo}`}>
-    <Image
-      class="frente"
-      src={producto.frente}
-      alt={`${producto.nombre}, vista de frente`}
-      widths={anchos}
-      sizes={tamanos}
-      quality={90}
-    />
-    <Image class="espalda" src={producto.espalda} alt="" widths={anchos} sizes={tamanos} quality={90} />
-  </span>
-  <h3 class="titulo">{producto.nombre}</h3>
-  <p class="precio">{formatoPrecio(producto.precio)}</p>
-</a>
+<div class:list={['tarjeta', producto?.tono, { proxima: proximo }]}>
+  {
+    producto && (
+      <a class="enlace" href={ruta(`prenda/${producto.codigo}/`)} data-revelar>
+        <span class="fotos" style={`view-transition-name: prenda-${producto.codigo}`}>
+          <Image
+            class="frente"
+            src={producto.frente}
+            alt={`${producto.nombre}, vista de frente`}
+            widths={anchos}
+            sizes={tamanos}
+            quality={90}
+          />
+          <Image class="espalda" src={producto.espalda} alt="" widths={anchos} sizes={tamanos} quality={90} />
+        </span>
+        <h3 class="titulo">{producto.nombre}</h3>
+        <p class="precio">{formatoPrecio(producto.precio)}</p>
+      </a>
+    )
+  }
+  {
+    proximo && (
+      <div class="enlace" data-revelar>
+        <span class="fotos">
+          <Image src={proximo.imagen} alt="" widths={anchos} sizes={tamanos} quality={90} />
+        </span>
+        <h3 class="titulo">{proximo.titulo}</h3>
+        <p class="precio">{proximo.aviso}</p>
+      </div>
+    )
+  }
+</div>
 
 <style>
+  /* Prenda oscura sobre Bone (lo normal); clara sobre Asphalt; el próximo drop sobre Black. */
+  .tarjeta {
+    --secundario: var(--tenue-claro);
+    height: 100%;
+    /* Mismo margen de la página: el nombre de la primera columna queda alineado con los títulos. */
+    padding: clamp(1rem, 2.4vw, 2.5rem) var(--margen) clamp(1.4rem, 3vw, 3.25rem);
+    background: var(--hueso);
+    color: var(--negro);
+  }
+
+  .clara {
+    --secundario: var(--tenue-oscuro);
+    background: var(--asfalto);
+    color: var(--hueso);
+  }
+
+  .proxima {
+    --secundario: var(--tenue-oscuro);
+    background: var(--negro);
+    color: var(--hueso);
+  }
+
   .enlace {
     display: block;
+    color: inherit;
     text-decoration: none;
   }
 
@@ -73,11 +117,6 @@ const anchos = [240, 360, 480, 720, 960];
     }
   }
 
-  h3,
-  .precio {
-    padding-left: 4%;
-  }
-
   h3 {
     margin-top: 0.45em;
     font-size: var(--t-lead);
@@ -88,6 +127,6 @@ const anchos = [240, 360, 480, 720, 960];
     font-weight: 300;
     font-size: var(--t-texto);
     line-height: 1.3;
-    color: var(--secundario, currentColor);
+    color: var(--secundario);
   }
 </style>

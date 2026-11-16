@@ -1,6 +1,6 @@
 ---
 import Tarjeta from './Tarjeta.astro';
-import { coleccion } from '../data/productos';
+import { coleccion, proximoDrop } from '../data/productos';
 ---
 
 <section class="coleccion" id="coleccion" aria-labelledby="titulo-coleccion">
@@ -9,11 +9,14 @@ import { coleccion } from '../data/productos';
   <ul class="rejilla">
     {
       coleccion.productos.map((producto) => (
-        <li class="prenda">
+        <li>
           <Tarjeta producto={producto} />
         </li>
       ))
     }
+    <li>
+      <Tarjeta proximo={proximoDrop} />
+    </li>
   </ul>
 </section>
 
@@ -21,82 +24,43 @@ import { coleccion } from '../data/productos';
   .coleccion {
     background: var(--asfalto);
     padding-top: clamp(1.75rem, 4vw, 4rem);
-    overflow: hidden; /* las franjas de color se pintan más anchas que la pantalla */
   }
 
   h2 {
     padding-inline: var(--margen);
-    margin-bottom: clamp(-0.6rem, -0.7vw, -0.2rem);
+    margin-bottom: clamp(0.6rem, 1.4vw, 1.5rem);
     font-size: var(--t-titulo);
   }
 
   /*
-   * Franjas Asphalt y Bone (en el diseño eran negro y blanco): cada fila de la rejilla es una franja de lado a lado.
-   * Cada prenda tiene su fondo y un ::before que lo extiende hacia los lados, así el corte
-   * de color sigue a las filas aunque cambie el número de columnas (3 en computador, 2 en celular).
+   * Mosaico de lado a lado, sin separación: cada tarjeta trae su fondo según el tono de la prenda
+   * (ver Tarjeta.astro), así el orden o el número de prendas puede cambiar sin tocar colores.
+   * Las prendas de una fila entran una tras otra (--i).
    */
   .rejilla {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    padding-inline: clamp(0.5rem, 6.4vw, 7rem);
-    isolation: isolate;
   }
 
-  .prenda {
-    --fondo: var(--asfalto);
-    --texto: var(--hueso);
-    --secundario: var(--tenue-oscuro);
-    position: relative;
-    padding: clamp(1rem, 2.4vw, 2.5rem) 9% clamp(1.4rem, 3vw, 3.25rem);
-    background: var(--fondo);
-    color: var(--texto);
+  li:nth-child(2n) {
+    --i: 1;
   }
 
-  .prenda::before {
-    content: '';
-    position: absolute;
-    inset: 0 -100vmax;
-    z-index: -1;
-    background: var(--fondo);
-  }
-
-  /* Celular, 2 columnas: filas pares en Bone. Las prendas de una fila entran una tras otra (--i). */
-  @media (max-width: 43.99rem) {
-    .prenda:nth-child(4n + 3),
-    .prenda:nth-child(4n + 4) {
-      --fondo: var(--hueso);
-      --texto: var(--negro);
-      --secundario: var(--tenue-claro);
-    }
-
-    .prenda:nth-child(2n) {
-      --i: 1;
-    }
-  }
-
-  /* Computador, 3 columnas: filas pares en Bone. */
+  /* Computador, 3 columnas. */
   @media (min-width: 44rem) {
     .rejilla {
       grid-template-columns: repeat(3, 1fr);
     }
 
-    .prenda {
-      padding-inline: 14%;
+    li:nth-child(n) {
+      --i: 0;
     }
 
-    .prenda:nth-child(6n + 4),
-    .prenda:nth-child(6n + 5),
-    .prenda:nth-child(6n + 6) {
-      --fondo: var(--hueso);
-      --texto: var(--negro);
-      --secundario: var(--tenue-claro);
-    }
-
-    .prenda:nth-child(3n + 2) {
+    li:nth-child(3n + 2) {
       --i: 1;
     }
 
-    .prenda:nth-child(3n) {
+    li:nth-child(3n) {
       --i: 2;
     }
   }
