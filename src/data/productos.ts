@@ -109,7 +109,7 @@ export type ProximoDrop = typeof proximoDrop;
  */
 export const PRECIOS_VISIBLES = true;
 
-/** Todas las prendas se venden con pago anticipado: se marca en cada tarjeta y en la página de la prenda. */
+/** Las prendas de la colección se venden con pago anticipado: se marca en su tarjeta y en su página (no en la del próximo drop). */
 export const PAGO_ANTICIPADO = true;
 
 const pesos = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 });
