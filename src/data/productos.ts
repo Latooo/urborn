@@ -26,9 +26,12 @@ function foto(codigo: string, lado: 'frente' | 'espalda'): ImageMetadata {
   return archivo.default;
 }
 
-// PROVISIONAL: el cliente no ha confirmado nombres, precios ni tallas. Los códigos siguen el de la
-// primera prenda, que lleva «urb.000» estampado; el precio es el del diseño inicial de la página.
-const PRECIO_PROVISIONAL = 90000;
+// Precios que dio el cliente: ropa de mujer 79.900 y ropa de hombre 89.900. Los crop tops son la de
+// mujer y las camisetas la de hombre.
+const PRECIO_POR_TIPO = { camiseta: 89900, 'crop top': 79900 } as const;
+
+// PROVISIONAL: el cliente no ha confirmado nombres ni tallas. Los códigos siguen el de la primera
+// prenda, que lleva «urb.000» estampado.
 const TALLAS_PROVISIONALES = ['S', 'M', 'L', 'XL'];
 
 // Las descripciones solo dicen lo que se ve estampado en cada prenda.
@@ -79,7 +82,7 @@ export const coleccion = {
     (prenda): Producto => ({
       ...prenda,
       nombre: `${NOMBRE_TIPO[prenda.tipo]} ${prenda.codigo}`,
-      precio: PRECIO_PROVISIONAL,
+      precio: PRECIO_POR_TIPO[prenda.tipo],
       frente: foto(prenda.codigo, 'frente'),
       espalda: foto(prenda.codigo, 'espalda'),
       tallas: TALLAS_PROVISIONALES,
@@ -87,20 +90,27 @@ export const coleccion = {
   ),
 };
 
-/** La tarjeta del siguiente drop: todavía no se muestra la prenda, solo la silueta con «???». */
+/**
+ * La tarjeta del siguiente drop: todavía no se muestra la prenda, solo la silueta con «???».
+ * No tiene página propia: la tarjeta abre WhatsApp con el pedido escrito.
+ */
 export const proximoDrop = {
   titulo: 'Próximo drop',
-  aviso: 'Próximamente',
+  precio: 33333,
   imagen: siluetaProximo,
+  mensaje: 'Hola URBORN, quiero pedir la camiseta del próximo drop.',
 };
 
 export type ProximoDrop = typeof proximoDrop;
 
 /**
- * El cliente pidió lanzar sin precios: mientras esté en false, en su lugar se ve «???» (ver Precio.astro)
- * y la portada no menciona precio. Para mostrarlos, cambiar a true.
+ * Con false, en lugar del precio se ve «???» (ver Precio.astro) y la portada no menciona precio.
+ * El sitio salió así y luego el cliente dio los precios.
  */
-export const PRECIOS_VISIBLES = false;
+export const PRECIOS_VISIBLES = true;
+
+/** Todas las prendas se venden con pago anticipado: se marca en cada tarjeta y en la página de la prenda. */
+export const PAGO_ANTICIPADO = true;
 
 const pesos = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 });
 

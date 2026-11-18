@@ -1,7 +1,7 @@
 ---
 import FotoPrenda from './FotoPrenda.astro';
 import Precio from './Precio.astro';
-import type { Producto, ProximoDrop } from '../data/productos';
+import { PAGO_ANTICIPADO, enlaceWhatsapp, type Producto, type ProximoDrop } from '../data/productos';
 import { ruta } from '../lib/rutas';
 
 interface Props {
@@ -19,7 +19,7 @@ const anchos = [240, 360, 480, 720, 960, 1280];
 ---
 
 <!--
-  Tarjeta de una prenda: lleva a su página. Frente y espalda van apilados y al pasar el cursor
+  Tarjeta de una prenda: lleva a su página (la del próximo drop abre WhatsApp). Frente y espalda van apilados y al pasar el cursor
   (o enfocar con teclado) se ve la espalda. Todas las tarjetas van sobre el mismo fondo, como en la
   tienda de referencia: la colección se lee como un solo bloque.
 -->
@@ -36,6 +36,7 @@ const anchos = [240, 360, 480, 720, 960, 1280];
             sizes={tamanos}
           />
           <FotoPrenda class="espalda" src={producto.espalda} alt="" widths={anchos} sizes={tamanos} />
+          {PAGO_ANTICIPADO && <span class="anticipado">Pago anticipado</span>}
         </span>
         <h3 class="titulo">{producto.nombre}</h3>
         <Precio valor={producto.precio} />
@@ -44,13 +45,17 @@ const anchos = [240, 360, 480, 720, 960, 1280];
   }
   {
     proximo && (
-      <div class="enlace" data-revelar>
+      <a class="enlace" href={enlaceWhatsapp(proximo.mensaje)} target="_blank" rel="noopener" data-revelar>
         <span class="fotos">
           <FotoPrenda src={proximo.imagen} alt="" widths={anchos} sizes={tamanos} />
+          {PAGO_ANTICIPADO && <span class="anticipado">Pago anticipado</span>}
         </span>
-        <h3 class="titulo">{proximo.titulo}</h3>
-        <p class="precio">{proximo.aviso}</p>
-      </div>
+        <h3 class="titulo">
+          {proximo.titulo}
+          <span class="solo-lector">, pedir por WhatsApp</span>
+        </h3>
+        <Precio valor={proximo.precio} />
+      </a>
     )
   }
 </div>
@@ -85,6 +90,19 @@ const anchos = [240, 360, 480, 720, 960, 1280];
     position: absolute;
     inset: 0;
     opacity: 0;
+  }
+
+  /* Marca de pago anticipado en la esquina de la foto, como las etiquetas de las tiendas. */
+  .anticipado {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.4em 0.65em;
+    background: var(--negro);
+    color: var(--hueso);
+    font-weight: 600;
+    font-size: var(--t-nota);
+    line-height: 1;
   }
 
   .enlace:focus-visible .frente {

@@ -7,7 +7,7 @@ import Campana from '../../components/Campana.astro';
 import FotoPrenda from '../../components/FotoPrenda.astro';
 import { trazoWhatsapp } from '../../lib/iconos';
 import Precio from '../../components/Precio.astro';
-import { PRECIOS_VISIBLES, coleccion, enlaceWhatsapp, formatoPrecio, mensajePedido, type Producto } from '../../data/productos';
+import { PAGO_ANTICIPADO, PRECIOS_VISIBLES, coleccion, enlaceWhatsapp, formatoPrecio, mensajePedido, type Producto } from '../../data/productos';
 import { marca } from '../../data/sitio';
 import { ruta } from '../../lib/rutas';
 
@@ -73,6 +73,7 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
       <div class="datos">
         <h1 class="titulo">{producto.nombre}</h1>
         <Precio valor={producto.precio} />
+        {PAGO_ANTICIPADO && <p class="anticipado">Pago anticipado</p>}
         <p class="descripcion">{producto.descripcion}</p>
 
         <fieldset class="tallas">
@@ -204,6 +205,19 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
     margin-top: 0.5rem;
     font-weight: 300;
     font-size: var(--t-lead);
+  }
+
+  .anticipado {
+    display: inline-block;
+    justify-self: start;
+    width: fit-content;
+    margin-top: 0.75rem;
+    padding: 0.4em 0.65em;
+    background: var(--datos-texto);
+    color: var(--datos-fondo);
+    font-weight: 600;
+    font-size: var(--t-nota);
+    line-height: 1;
   }
 
   .descripcion {
