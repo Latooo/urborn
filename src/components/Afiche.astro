@@ -1,0 +1,30 @@
+---
+import { Image } from 'astro:assets';
+import afiche from '../assets/img/afiche-the-origin.jpg';
+---
+
+<!--
+  Afiche de la colección que mandó el cliente. Su fondo blanco se pasó a Bone (multiplicando), así
+  continúa el campo de la colección sin dejar un recuadro blanco. Va a todo el ancho y entero: el
+  texto toca el borde izquierdo, por eso no se recorta ni se amplía al hacer scroll.
+-->
+<div class="afiche">
+  <Image
+    src={afiche}
+    alt="Modelo con la camiseta A[R]T y los brazos abiertos, junto al texto The Origin. We were never made to fit in."
+    widths={[640, 960, 1280, 1680, 2100, 2576]}
+    sizes="100vw"
+    quality={90}
+    data-revelar
+  />
+</div>
+
+<style>
+  .afiche {
+    background: var(--hueso);
+  }
+
+  .afiche img {
+    width: 100%;
+  }
+</style>

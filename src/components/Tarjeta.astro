@@ -1,6 +1,7 @@
 ---
 import FotoPrenda from './FotoPrenda.astro';
-import { formatoPrecio, type Producto, type ProximoDrop } from '../data/productos';
+import Precio from './Precio.astro';
+import type { Producto, ProximoDrop } from '../data/productos';
 import { ruta } from '../lib/rutas';
 
 interface Props {
@@ -37,7 +38,7 @@ const anchos = [240, 360, 480, 720, 960, 1280];
           <FotoPrenda class="espalda" src={producto.espalda} alt="" widths={anchos} sizes={tamanos} />
         </span>
         <h3 class="titulo">{producto.nombre}</h3>
-        <p class="precio">{formatoPrecio(producto.precio)}</p>
+        <Precio valor={producto.precio} />
       </a>
     )
   }

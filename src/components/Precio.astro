@@ -1,0 +1,24 @@
+---
+import { PRECIOS_VISIBLES, formatoPrecio } from '../data/productos';
+
+interface Props {
+  valor: number;
+}
+
+// El resto de atributos (entre ellos el de estilos con alcance de quien lo usa) va al párrafo.
+const { valor, ...atributos } = Astro.props;
+---
+
+<!-- Precio de una prenda. Mientras el cliente no lo anuncie se ve «???»; quien usa lector de pantalla oye "Precio por anunciar". -->
+<p class="precio" {...atributos}>
+  {
+    PRECIOS_VISIBLES ? (
+      formatoPrecio(valor)
+    ) : (
+      <>
+        <span aria-hidden="true">???</span>
+        <span class="solo-lector">Precio por anunciar</span>
+      </>
+    )
+  }
+</p>

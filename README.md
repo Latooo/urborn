@@ -17,7 +17,7 @@ npm run preview  # sirve dist/ para revisarlo
 
 ## Estructura
 
-- `src/pages/index.astro` — el inicio: portada, colección, banner de la figura y la frase de la marca con el paso al manifiesto.
+- `src/pages/index.astro` — el inicio: portada, colección, afiche de The Origin, banner de la figura y la frase de la marca con el paso al manifiesto.
 - `src/pages/marca.astro` — la página de la marca (`/marca/`): manifiesto, significado del nombre, universo de colecciones y la invitación a hacer parte de la marca (`#unete`). Se llega por la i de la barra y por el botón "Leer el manifiesto" del inicio; la R de la barra lleva directo a la invitación.
 - `src/pages/prenda/[codigo].astro` — la página de cada prenda (`/prenda/000/`...): frente y espalda, precio, tallas y botón de pedido por WhatsApp con el mensaje ya escrito; debajo, las demás prendas. La foto de campaña solo sale en la prenda que aparece en ella.
 - `src/components/` — las secciones. Del inicio: animación de entrada, hero con la franja del lema, colección, figura (banner) y cierre con la frase. De la página de marca: manifiesto, significado, universo e invitación (`Unete.astro`). Compartidos: barra superior, pie de página, `Tarjeta.astro` (la tarjeta de una prenda y la del próximo drop) y `Campana.astro` (la foto de campaña, en la ficha y junto a la invitación).
@@ -26,7 +26,8 @@ npm run preview  # sirve dist/ para revisarlo
 - `src/components/FotoPrenda.astro` — foto de una prenda: sale en AVIF (guarda el color a resolución completa, así el rojo
   de los estampados queda nítido) con WebP de respaldo. El `sizes` de cada uso debe cubrir el ancho real de la prenda:
   si se queda corto, el navegador amplía una imagen más pequeña y se ve borrosa.
-- `src/data/productos.ts` — lista de prendas (tipo, tono, precio, tallas, descripción), la tarjeta del próximo drop y el texto del pedido. Agregar o cambiar productos se hace aquí.
+- `src/data/productos.ts` — `PRECIOS_VISIBLES`: el sitio salió sin precios (se ve «???») por pedido del cliente; para mostrarlos, pasarlo a `true`.
+  Lista de prendas (tipo, tono, precio, tallas, descripción), la tarjeta del próximo drop y el texto del pedido. Agregar o cambiar productos se hace aquí.
 - `src/assets/img/prendas/` — frente y espalda de cada prenda (`<código>-frente.png`, `<código>-espalda.png`), recortadas de los archivos del cliente y todas en el mismo lienzo, más la silueta del próximo drop.
   Los mockups del cliente vienen calcados (vectorizados): contorno ondulado y tela con manchas planas. Al recortarlos
   se suaviza el contorno y el sombreado de la tela, sin tocar los estampados (se comprobó que no cambian). Para agregar una prenda: sus dos imágenes aquí y una entrada en `productos.ts`.
@@ -74,7 +75,11 @@ El inicio, la ficha y la página de marca pasan sin fallos. Cambios que salieron
 
 ## Despliegue
 
-Cada push a `main` compila y publica en GitHub Pages (`.github/workflows/pages.yml`).
+Cada push a `main` compila y publica en dos lados:
+
+- Netlify, el sitio público: https://urborn.netlify.app (configuración en `netlify.toml`; la dirección la toma de la
+  variable `URL` que pone Netlify, así que sigue sirviendo si luego se conecta un dominio propio).
+- GitHub Pages, copia de revisión marcada para que los buscadores no la indexen (`.github/workflows/pages.yml`).
 
 El sitio usa rutas con base configurable: el workflow define `BASE_PATH=/urborn/` para Pages. Sin esa
 variable se compila para la raíz, que es lo que necesita Netlify (comando `npm run build`, carpeta `dist`).
@@ -93,4 +98,4 @@ variable se compila para la raíz, que es lo que necesita Netlify (comando `npm 
   esos originales no se guardan en el repositorio porque es público y son los artes de estampado.
 - Identidad de marca (paleta, tipografías y página de marca con manifiesto, significado y universo): aplicada, en revisión.
   La página de marca repite las fotos que hay (banner, campaña y camiseta) hasta que lleguen más.
-- Pendiente: contenido real y pulido (fase 3), Netlify y dominio (fase 4).
+- Publicado en Netlify (urborn.netlify.app). Pendiente: contenido real y pulido (fase 3) y dominio propio (fase 4).

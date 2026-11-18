@@ -1,17 +1,18 @@
 ---
 import { Image } from 'astro:assets';
 import foto from '../assets/img/hero-new-collection.jpg';
-import { coleccion, formatoPrecio } from '../data/productos';
+import { PRECIOS_VISIBLES, coleccion, formatoPrecio } from '../data/productos';
 import { marca } from '../data/sitio';
 
 // El lema se repite dos veces seguidas para que la franja gire sin cortes.
 const copias = Array.from({ length: 2 });
 const repeticiones = Array.from({ length: 8 });
 
-// Precio que se anuncia en la portada: el de todas si es el mismo, o "desde" el menor.
+// Precio que se anuncia en la portada: el de todas si es el mismo, o "desde" el menor. Nada si aún no hay precios.
 const precios = coleccion.productos.map((producto) => producto.precio);
 const menor = Math.min(...precios);
 const precio = precios.every((valor) => valor === menor) ? formatoPrecio(menor) : `desde ${formatoPrecio(menor)}`;
+const frase = `Camisetas y crop tops de la colección ${coleccion.nombre}${PRECIOS_VISIBLES ? `, ${precio}` : ''}.`;
 ---
 
 <!-- La franja del lema va dentro de los mismos márgenes que la barra, como en el diseño. -->
@@ -51,7 +52,7 @@ const precio = precios.every((valor) => valor === menor) ? formatoPrecio(menor) 
     en celular va justo debajo.
   -->
   <div class="resumen">
-    <p>Camisetas y crop tops de la colección {coleccion.nombre}, {precio}.</p>
+    <p>{frase}</p>
     <a class="boton" href="#coleccion">Ver la colección</a>
   </div>
 </div>

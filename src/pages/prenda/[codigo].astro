@@ -6,7 +6,8 @@ import Tarjeta from '../../components/Tarjeta.astro';
 import Campana from '../../components/Campana.astro';
 import FotoPrenda from '../../components/FotoPrenda.astro';
 import { trazoWhatsapp } from '../../lib/iconos';
-import { coleccion, enlaceWhatsapp, formatoPrecio, mensajePedido, type Producto } from '../../data/productos';
+import Precio from '../../components/Precio.astro';
+import { PRECIOS_VISIBLES, coleccion, enlaceWhatsapp, formatoPrecio, mensajePedido, type Producto } from '../../data/productos';
 import { marca } from '../../data/sitio';
 import { ruta } from '../../lib/rutas';
 
@@ -37,7 +38,7 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
 
 <Base
   titulo={`${producto.nombre} — ${marca.nombre}`}
-  descripcion={`${producto.nombre} de la colección ${coleccion.nombre}, ${formatoPrecio(producto.precio)}. Pedidos por WhatsApp.`}
+  descripcion={`${producto.nombre} de la colección ${coleccion.nombre}${PRECIOS_VISIBLES ? `, ${formatoPrecio(producto.precio)}` : ''}. Pedidos por WhatsApp.`}
 >
   <Cabecera />
 
@@ -71,7 +72,7 @@ const tamanos = '(min-width: 60rem) 27vw, 72vw';
 
       <div class="datos">
         <h1 class="titulo">{producto.nombre}</h1>
-        <p class="precio">{formatoPrecio(producto.precio)}</p>
+        <Precio valor={producto.precio} />
         <p class="descripcion">{producto.descripcion}</p>
 
         <fieldset class="tallas">

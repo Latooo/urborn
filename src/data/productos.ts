@@ -96,6 +96,12 @@ export const proximoDrop = {
 
 export type ProximoDrop = typeof proximoDrop;
 
+/**
+ * El cliente pidió lanzar sin precios: mientras esté en false, en su lugar se ve «???» (ver Precio.astro)
+ * y la portada no menciona precio. Para mostrarlos, cambiar a true.
+ */
+export const PRECIOS_VISIBLES = false;
+
 const pesos = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 });
 
 export function formatoPrecio(valor: number): string {

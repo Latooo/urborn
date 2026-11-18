@@ -1,0 +1,12 @@
+# Despliegue en Netlify (urborn.netlify.app). Netlify compila el repositorio en cada push a main.
+# La versión de Node la toma de .nvmrc. Sin BASE_PATH el sitio va en la raíz, y sin PUBLIC_NOINDEX
+# queda visible para buscadores (la copia de GitHub Pages sigue marcada para no indexarse).
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Los archivos de _astro llevan huella en el nombre: si cambian, cambia el nombre. Se guardan un año.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
