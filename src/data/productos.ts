@@ -97,6 +97,8 @@ export const coleccion = {
 export const proximoDrop = {
   titulo: 'Próximo drop',
   precio: 33333,
+  /** Se vende con pago anticipado: lleva la marca en la esquina de la foto. */
+  pagoAnticipado: true,
   imagen: siluetaProximo,
   mensaje: 'Hola URBORN, quiero pedir la camiseta del próximo drop.',
 };
@@ -109,8 +111,6 @@ export type ProximoDrop = typeof proximoDrop;
  */
 export const PRECIOS_VISIBLES = true;
 
-/** Las prendas de la colección se venden con pago anticipado: se marca en su tarjeta y en su página (no en la del próximo drop). */
-export const PAGO_ANTICIPADO = true;
 
 const pesos = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 });
 
