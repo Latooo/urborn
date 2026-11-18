@@ -17,10 +17,10 @@ npm run preview  # sirve dist/ para revisarlo
 
 ## Estructura
 
-- `src/pages/index.astro` — el inicio: portada, colección, afiche de The Origin, banner de la figura y la frase de la marca con el paso al manifiesto.
+- `src/pages/index.astro` — el inicio: portada, colección, banner de la figura y, al cierre, el afiche de The Origin con el paso al manifiesto.
 - `src/pages/marca.astro` — la página de la marca (`/marca/`): manifiesto, significado del nombre, universo de colecciones y la invitación a hacer parte de la marca (`#unete`). Se llega por la i de la barra y por el botón "Leer el manifiesto" del inicio; la R de la barra lleva directo a la invitación.
 - `src/pages/prenda/[codigo].astro` — la página de cada prenda (`/prenda/000/`...): frente y espalda, precio, tallas y botón de pedido por WhatsApp con el mensaje ya escrito; debajo, las demás prendas. La foto de campaña solo sale en la prenda que aparece en ella.
-- `src/components/` — las secciones. Del inicio: animación de entrada, hero con la franja del lema, colección, figura (banner) y cierre con la frase. De la página de marca: manifiesto, significado, universo e invitación (`Unete.astro`). Compartidos: barra superior, pie de página, `Tarjeta.astro` (la tarjeta de una prenda y la del próximo drop) y `Campana.astro` (la foto de campaña, en la ficha y junto a la invitación).
+- `src/components/` — las secciones. Del inicio: animación de entrada, hero con la franja del lema, colección, figura (banner) y cierre (afiche del cliente con el botón al manifiesto). De la página de marca: manifiesto, significado, universo e invitación (`Unete.astro`). Compartidos: barra superior, pie de página, `Tarjeta.astro` (la tarjeta de una prenda y la del próximo drop) y `Campana.astro` (la foto de campaña, en la ficha y junto a la invitación).
 - `src/data/sitio.ts` — lema, enlaces de redes y WhatsApp, y los textos de marca: manifiesto, significado (URBAN + BORN), los capítulos del universo y la invitación (con el mensaje que llega escrito a WhatsApp).
 - `src/lib/iconos.ts` — trazos de íconos que se usan en más de un sitio.
 - `src/components/FotoPrenda.astro` — foto de una prenda: sale en AVIF (guarda el color a resolución completa, así el rojo
@@ -71,7 +71,9 @@ El inicio, la ficha y la página de marca pasan sin fallos. Cambios que salieron
 - La barra superior usa un color plano en vez del degradado suave del diseño, y comparte márgenes con el contenido.
 - La escala de texto se redujo a cuatro tamaños más el titular (`--t-*` en `src/styles/global.css`).
 - El texto corrido va en el color pleno (Bone o Black); el gris se deja para precios y notas.
-- La frase del cierre del inicio va sobre Bone, para que el final no sea un tramo largo de negro.
+- El cierre del inicio es el afiche de The Origin sobre Bone: se sirve tal como lo mandó el cliente y su blanco se ve Bone
+  porque se multiplica con el fondo. Va en AVIF, que conserva el grano de la foto mejor que WebP.
+- El aviso «Powered by Netlify» está apagado en Netlify (Project configuration > General > Powered by Netlify badge).
 
 ## Despliegue
 

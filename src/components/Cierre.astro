@@ -1,25 +1,47 @@
 ---
+import { Picture } from 'astro:assets';
+import afiche from '../assets/img/afiche-the-origin.jpg';
 import { manifiesto } from '../data/sitio';
 import { ruta } from '../lib/rutas';
 ---
 
 <!--
-  Cierre del inicio: la frase de la marca y el paso a la página con el manifiesto completo.
-  Va sobre Bone para que el final de la página no sea un tramo largo de negro (figura, frase y pie).
-  Al entrar a /marca/ la frase viaja hasta el título de esa página.
+  Cierre del inicio: el afiche de The Origin, que ya trae la frase de la marca, y el paso al
+  manifiesto completo. El botón va en el espacio vacío de arriba a la izquierda del afiche.
+  El afiche se sirve tal como lo mandó el cliente; su fondo blanco se ve Bone porque se multiplica
+  con el fondo de la sección (así no queda un recuadro blanco). Sale en AVIF, que conserva el grano
+  de la foto mucho mejor que WebP.
 -->
 <section class="cierre" aria-labelledby="titulo-cierre">
-  <h2 class="titulo" id="titulo-cierre" data-revelar="mascara"><span>{manifiesto.titulo}</span></h2>
-  <p data-revelar><a class="boton" href={ruta('marca/')}>Leer el manifiesto</a></p>
+  <h2 class="solo-lector" id="titulo-cierre">{manifiesto.titulo}</h2>
+  <Picture
+    src={afiche}
+    alt="Modelo con la camiseta A[R]T y los brazos abiertos, junto al texto The Origin. We were never made to fit in."
+    widths={[640, 960, 1280, 1680, 2100, 2576]}
+    sizes="100vw"
+    formats={['avif']}
+    fallbackFormat="webp"
+    quality={90}
+  />
+  <p class="paso"><a class="boton" href={ruta('marca/')}>Leer el manifiesto</a></p>
 </section>
 
 <style>
   .cierre {
-    display: grid;
-    gap: clamp(1.5rem, 3vw, 3rem);
-    padding: clamp(3rem, 7vw, 7rem) var(--margen);
+    position: relative;
+    isolation: isolate;
     background: var(--hueso);
-    color: var(--negro);
+  }
+
+  img {
+    width: 100%;
+    mix-blend-mode: multiply;
+  }
+
+  .paso {
+    position: absolute;
+    top: var(--margen);
+    left: var(--margen);
   }
 
   /* El botón global es para fondo oscuro; aquí va invertido. */
@@ -32,24 +54,5 @@ import { ruta } from '../lib/rutas';
     background: var(--hueso);
     color: var(--negro);
     outline-color: var(--negro);
-  }
-
-  /* En celular va un poco más pequeño que el titular del hero para que quepa en dos líneas. */
-  h2 {
-    font-size: calc(var(--t-display) * 0.74);
-    text-wrap: balance;
-    view-transition-name: frase;
-  }
-
-  /* Computador: la frase a la izquierda y el botón abajo a la derecha, como en el hero. */
-  @media (min-width: 60rem) {
-    .cierre {
-      grid-template-columns: 1fr auto;
-      align-items: end;
-    }
-
-    h2 {
-      font-size: var(--t-display);
-    }
   }
 </style>
