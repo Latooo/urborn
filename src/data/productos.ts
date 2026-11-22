@@ -26,9 +26,9 @@ function foto(codigo: string, lado: 'frente' | 'espalda'): ImageMetadata {
   return archivo.default;
 }
 
-// Precios que dio el cliente: ropa de mujer 79.900 y ropa de hombre 89.900. Los crop tops son la de
-// mujer y las camisetas la de hombre.
-const PRECIO_POR_TIPO = { camiseta: 89900, 'crop top': 79900 } as const;
+// Precios que dio el cliente: ropa de mujer 69.900 y ropa de hombre 79.900 (antes 79.900 y 89.900;
+// les bajó 10.000). Los crop tops son la de mujer y las camisetas la de hombre.
+const PRECIO_POR_TIPO = { camiseta: 79900, 'crop top': 69900 } as const;
 
 // PROVISIONAL: el cliente no ha confirmado nombres ni tallas. Los códigos siguen el de la primera
 // prenda, que lleva «urb.000» estampado.

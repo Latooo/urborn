@@ -26,7 +26,7 @@ npm run preview  # sirve dist/ para revisarlo
 - `src/components/FotoPrenda.astro` — foto de una prenda: sale en AVIF (guarda el color a resolución completa, así el rojo
   de los estampados queda nítido) con WebP de respaldo. El `sizes` de cada uso debe cubrir el ancho real de la prenda:
   si se queda corto, el navegador amplía una imagen más pequeña y se ve borrosa.
-- `src/data/productos.ts` — precios del cliente: crop tops (ropa de mujer) $79.900, camisetas (ropa de hombre) $89.900 y la
+- `src/data/productos.ts` — precios del cliente: crop tops (ropa de mujer) $69.900, camisetas (ropa de hombre) $79.900 y la
   del próximo drop $33.333, que abre WhatsApp directo. solo el próximo drop lleva la marca «Pago anticipado» (`pagoAnticipado`);
   `PRECIOS_VISIBLES` en `false` vuelve a mostrar «???». Lista de prendas (tipo, tono, precio, tallas, descripción), la tarjeta del próximo drop y el texto del pedido. Agregar o cambiar productos se hace aquí.
 - `src/assets/img/prendas/` — frente y espalda de cada prenda (`<código>-frente.png`, `<código>-espalda.png`), recortadas de los archivos del cliente y todas en el mismo lienzo, más la silueta del próximo drop.
